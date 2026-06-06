@@ -80,11 +80,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { title: "Vitrina Pro — Páginas web para negocios locales" },
       { name: "description", content: "Creamos páginas web rápidas, económicas y profesionales para que tus clientes confíen en tu negocio y te contacten por WhatsApp." },
       { name: "author", content: "Vitrina Pro" },
-      { property: "og:title", content: "Vitrina Pro — Tu negocio se ve formal" },
-      { property: "og:description", content: "Páginas web rápidas, económicas y profesionales para negocios locales." },
+      { property: "og:title", content: "Vitrina Pro — Páginas web para negocios locales" },
+      { property: "og:description", content: "Creamos páginas web rápidas, económicas y profesionales para que tus clientes confíen en tu negocio y te contacten por WhatsApp." },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary" },
       { name: "twitter:site", content: "@Lovable" },
+      { name: "twitter:title", content: "Vitrina Pro — Páginas web para negocios locales" },
+      { name: "twitter:description", content: "Creamos páginas web rápidas, económicas y profesionales para que tus clientes confíen en tu negocio y te contacten por WhatsApp." },
+      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/170a6c82-da41-4664-90c8-d591d4f15b34/id-preview-c1873285--519fa39e-c405-4b3d-888e-cd647adbd6f3.lovable.app-1780717101541.png" },
+      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/170a6c82-da41-4664-90c8-d591d4f15b34/id-preview-c1873285--519fa39e-c405-4b3d-888e-cd647adbd6f3.lovable.app-1780717101541.png" },
     ],
     links: [
       {
