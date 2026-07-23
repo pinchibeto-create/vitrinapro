@@ -67,22 +67,22 @@
   --color-brand-foreground: var(--brand-foreground);
   --color-trust: var(--trust);
   --color-trust-foreground: var(--trust-foreground);
-  --font-display: "Manrope", ui-sans-serif, system-ui, sans-serif;
-  --font-sans: "Manrope", ui-sans-serif, system-ui, sans-serif;
+  --font-display: "Playfair Display", "Lora", ui-serif, Georgia, serif;
+  --font-sans: "Inter", "Manrope", ui-sans-serif, system-ui, sans-serif;
 }
 
 :root {
   --radius: 0.625rem;
-  /* Vitrina Pro palette */
-  --background: #FAF7F1;        /* blanco cálido */
-  --surface:    #EFE7DA;        /* beige suave */
-  --ink:        #1E1E1E;        /* grafito */
-  --ink-soft:   #6F6A62;        /* gris cálido */
-  --hairline:   #D8D0C3;
-  --brand:      #2563EB;        /* azul profesional */
-  --brand-foreground: #FAF7F1;
-  --trust:      #16A34A;        /* verde confianza */
-  --trust-foreground: #FAF7F1;
+  /* Mi Vitrina Digital · Vitrina Pro — paleta salvia / crema */
+  --background: #F7F3EC;        /* crema / marfil */
+  --surface:    #E9E2D7;        /* beige claro */
+  --ink:        #1E1E1C;        /* negro suave */
+  --ink-soft:   #6B6357;        /* gris cálido */
+  --hairline:   rgba(124, 137, 98, 0.18);
+  --brand:      #7C8962;        /* verde salvia */
+  --brand-foreground: #FFFFFF;
+  --trust:      #4A3A32;        /* café profundo */
+  --trust-foreground: #F7F3EC;
 
   --foreground: var(--ink);
   --card: #FFFFFF;

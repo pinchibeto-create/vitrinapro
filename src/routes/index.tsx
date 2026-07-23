@@ -145,20 +145,31 @@ function AnnouncementBar() {
 
 function Logo() {
   return (
-    <a href="#inicio" className="flex items-center gap-2.5 group">
+    <a href="#inicio" className="flex items-center gap-3 group">
       <span
         aria-hidden
-        className="inline-flex h-8 w-8 items-center justify-center rounded-lg border hairline bg-background shadow-sm transition-transform group-hover:-rotate-3"
+        className="relative inline-flex h-10 w-9 items-center justify-center rounded-md border-[1.5px] border-brand bg-background transition-transform group-hover:-rotate-2"
       >
-        <span className="grid h-4 w-4 grid-cols-2 grid-rows-2 gap-[2px]">
-          <span className="rounded-[1px] bg-brand" />
-          <span className="rounded-[1px] bg-hairline" />
-          <span className="rounded-[1px] bg-hairline" />
-          <span className="rounded-[1px] bg-trust" />
+        <span className="absolute left-1 top-1 flex gap-[2px]">
+          <span className="h-[3px] w-[3px] rounded-full bg-brand/70" />
+          <span className="h-[3px] w-[3px] rounded-full bg-brand/70" />
+          <span className="h-[3px] w-[3px] rounded-full bg-brand/70" />
+        </span>
+        <span className="mt-2 flex h-4 w-5 flex-col overflow-hidden rounded-[2px] border-[1.5px] border-brand">
+          <span className="h-1 w-full border-b-[1.5px] border-brand" />
+          <span className="flex flex-1">
+            <span className="flex-1 border-r-[1.5px] border-brand" />
+            <span className="flex-1" />
+          </span>
         </span>
       </span>
-      <span className="font-display text-[17px] font-extrabold tracking-tight">
-        Vitrina<span className="text-brand"> Pro</span>
+      <span className="leading-[1.05]">
+        <span className="block font-display text-[15px] font-bold tracking-tight text-foreground">
+          Mi Vitrina <span className="text-ink-soft font-medium">Digital</span>
+        </span>
+        <span className="mt-0.5 block text-[9px] font-semibold uppercase tracking-[0.28em] text-brand">
+          — Vitrina Pro —
+        </span>
       </span>
     </a>
   );
@@ -327,7 +338,7 @@ function Hero() {
               <div className="mt-8 flex flex-wrap items-center gap-3">
                 <a
                   href={WHATSAPP_URL}
-                  className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-brand-foreground shadow-[0_10px_30px_-12px_rgba(37,99,235,0.55)] transition-transform hover:-translate-y-0.5"
+                  className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-brand-foreground shadow-[0_10px_30px_-12px_rgba(124,137,98,0.55)] transition-transform hover:-translate-y-0.5 hover:bg-[#6b7855]"
                 >
                   Quiero mi página web
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
@@ -682,7 +693,7 @@ function PaqueteCard({ p }: { p: Paquete }) {
       transition={spring}
       className={`relative flex h-full flex-col rounded-3xl border bg-background p-7 transition-shadow ${
         featured
-          ? "border-brand shadow-[0_30px_60px_-30px_rgba(37,99,235,0.4)]"
+          ? "border-brand shadow-[0_30px_60px_-30px_rgba(124,137,98,0.4)]"
           : "hairline hover:border-brand/40 hover:shadow-[0_20px_50px_-25px_rgba(30,30,30,0.18)]"
       }`}
     >
