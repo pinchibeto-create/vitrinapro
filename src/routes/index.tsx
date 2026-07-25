@@ -1169,6 +1169,18 @@ function PreviewModal({ p, onClose }: { p: Proyecto; onClose: () => void }) {
           </div>
         </div>
 
+        {p.gallery && p.gallery.length > 1 && (
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {p.gallery.map((g, i) => (
+              <div key={i} className="overflow-hidden rounded-xl border hairline bg-background aspect-[16/10]">
+                <img src={g} alt={`${p.name} — vista ${i + 1}`} className="h-full w-full object-cover object-top" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <p className="mt-5 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
+
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <p className="text-[13px] text-ink-soft">
             Proyecto: <span className="text-foreground font-medium">{p.name}</span>
