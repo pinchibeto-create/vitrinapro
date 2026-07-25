@@ -1438,6 +1438,13 @@ function Paquetes() {
                 primero revisamos si podemos implementarla y te indicamos alcance
                 y costo antes de comenzar.
               </p>
+              <p className="text-[13.5px] text-ink-soft leading-relaxed sm:col-span-2">
+                <span className="text-foreground font-semibold">Dominio .com:</span>{" "}
+                el precio de ambos paquetes incluye el registro y la configuración
+                del dominio .com por un año. La renovación del dominio después del
+                primer año se cotiza por separado. El hosting y mantenimiento no
+                están incluidos.
+              </p>
             </div>
           </div>
         </Reveal>
