@@ -1830,7 +1830,7 @@ function Footer() {
             </p>
           </div>
           <FooterCol title="Paquetes" items={["Vitrina Inicial", "Vitrina Pro", "Actualizaciones", "Herramientas a medida"]} />
-          <FooterCol title="Proyectos" items={["La Florida Ecoturístico", "Terapia con Violeta", "AEME Empresarial", "Tu Fiesta Fácil"]} />
+          <FooterCol title="Proyectos" items={["La Florida Paraíso Ecoturístico", "Terapia con Violeta", "AEME — Alianza Empresarial", "Tu Fiesta Fácil", "Qi Flow Hands"]} />
           <div>
             <h4 className="eyebrow">Contacto</h4>
             <ul className="mt-4 space-y-3 text-[14px] text-ink-soft">
