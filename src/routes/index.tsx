@@ -1066,6 +1066,7 @@ function ProyectoCard({ p, onPreview }: { p: Proyecto; onPreview: () => void }) 
       <div className="p-7">
         <Eyebrow>{p.category}</Eyebrow>
         <h3 className="mt-2 font-display text-[24px] tracking-tight">{p.name}</h3>
+        <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {p.chips.map((c) => (
             <span
@@ -1078,12 +1079,12 @@ function ProyectoCard({ p, onPreview }: { p: Proyecto; onPreview: () => void }) 
         </div>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <a
-            href="#"
+            href={p.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-brand hover:text-foreground transition-colors"
           >
-            {p.cta} <ExternalLink className="h-3.5 w-3.5" />
+            Ver página <ExternalLink className="h-3.5 w-3.5" />
           </a>
           <button
             onClick={onPreview}
@@ -1173,12 +1174,12 @@ function PreviewModal({ p, onClose }: { p: Proyecto; onClose: () => void }) {
             Proyecto: <span className="text-foreground font-medium">{p.name}</span>
           </p>
           <a
-            href="#"
+            href={p.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-foreground hover:bg-foreground transition-colors"
           >
-            Visitar proyecto real <ExternalLink className="h-3.5 w-3.5" />
+            Ver página <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
       </motion.div>
