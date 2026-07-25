@@ -38,10 +38,12 @@ import {
   GripVertical,
 } from "lucide-react";
 
-import projFlorida from "@/assets/proj-florida.jpg";
-import projVioleta from "@/assets/proj-violeta.jpg";
-import projAeme from "@/assets/proj-aeme.jpg";
-import projFiesta from "@/assets/proj-fiestafacil.jpg";
+import projFlorida from "@/assets/la-florida-01-dispositivos.png.asset.json";
+import projFloridaFicha from "@/assets/la-florida-02-ficha-editorial.png.asset.json";
+import projVioleta from "@/assets/terapia-violeta-01-dispositivos.png.asset.json";
+import projAeme from "@/assets/aeme-01-dispositivos.png.asset.json";
+import projFiesta from "@/assets/tu-fiesta-facil-02-ficha-editorial.png.asset.json";
+import projQi from "@/assets/el-camino-del-qi-02-ficha-editorial.png.asset.json";
 import exCabanas from "@/assets/ex-cabanas.jpg";
 import exPsicologa from "@/assets/ex-psicologa.jpg";
 import exRestaurante from "@/assets/ex-restaurante.jpg";
@@ -64,7 +66,7 @@ export const Route = createFileRoute("/")({
 /* ───────────────────────────── helpers ───────────────────────────── */
 
 const WHATSAPP_URL =
-  "https://wa.me/525555555555?text=Hola%20Mi%20Vitrina%20Digital%2C%20quiero%20mi%20p%C3%A1gina%20web";
+  "https://wa.me/529612559561?text=Hola%2C%20vi%20la%20p%C3%A1gina%20de%20Mi%20Vitrina%20Digital%20y%20quiero%20informaci%C3%B3n%20para%20crear%20mi%20p%C3%A1gina%20web.";
 
 const NAV = [
   { label: "Inicio", href: "#inicio" },
