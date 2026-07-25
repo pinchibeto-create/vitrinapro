@@ -38,10 +38,18 @@ import {
   GripVertical,
 } from "lucide-react";
 
-import projFlorida from "@/assets/proj-florida.jpg";
-import projVioleta from "@/assets/proj-violeta.jpg";
-import projAeme from "@/assets/proj-aeme.jpg";
-import projFiesta from "@/assets/proj-fiestafacil.jpg";
+import projFloridaAsset from "@/assets/la-florida-01-dispositivos.png.asset.json";
+import projFloridaFichaAsset from "@/assets/la-florida-02-ficha-editorial.png.asset.json";
+import projVioletaAsset from "@/assets/terapia-violeta-01-dispositivos.png.asset.json";
+import projAemeAsset from "@/assets/aeme-01-dispositivos.png.asset.json";
+import projFiestaAsset from "@/assets/tu-fiesta-facil-02-ficha-editorial.png.asset.json";
+import projQiAsset from "@/assets/el-camino-del-qi-02-ficha-editorial.png.asset.json";
+const projFlorida = projFloridaAsset.url;
+const projFloridaFicha = projFloridaFichaAsset.url;
+const projVioleta = projVioletaAsset.url;
+const projAeme = projAemeAsset.url;
+const projFiesta = projFiestaAsset.url;
+const projQi = projQiAsset.url;
 import exCabanas from "@/assets/ex-cabanas.jpg";
 import exPsicologa from "@/assets/ex-psicologa.jpg";
 import exRestaurante from "@/assets/ex-restaurante.jpg";
@@ -64,7 +72,7 @@ export const Route = createFileRoute("/")({
 /* ───────────────────────────── helpers ───────────────────────────── */
 
 const WHATSAPP_URL =
-  "https://wa.me/525555555555?text=Hola%20Mi%20Vitrina%20Digital%2C%20quiero%20mi%20p%C3%A1gina%20web";
+  "https://wa.me/529612559561?text=Hola%2C%20vi%20la%20p%C3%A1gina%20de%20Mi%20Vitrina%20Digital%20y%20quiero%20informaci%C3%B3n%20para%20crear%20mi%20p%C3%A1gina%20web.";
 
 const NAV = [
   { label: "Inicio", href: "#inicio" },
@@ -914,6 +922,9 @@ type Proyecto = {
   name: string;
   category: string;
   img: string;
+  gallery?: string[];
+  url: string;
+  description: string;
   chips: string[];
   cta: string;
   badge?: string;
@@ -926,34 +937,58 @@ const PROYECTOS: Proyecto[] = [
     name: "La Florida Paraíso Ecoturístico",
     category: "Ecoturismo · Hospedaje",
     img: projFlorida,
+    gallery: [projFlorida, projFloridaFicha],
+    url: "https://lafloridaparaisoecoturistico.com",
+    description:
+      "Sitio web para un proyecto ecoturístico ubicado en la región de Lagos de Montebello, con información sobre hospedaje, naturaleza, experiencias y formas de contacto.",
     chips: ["Cabañas", "Tarifas", "Galería", "Cómo llegar", "FAQ", "Reservas por WhatsApp"],
-    cta: "Ver proyecto real",
+    cta: "Ver página",
   },
   {
     slug: "violeta",
     name: "Terapia con Violeta",
     category: "Psicología · Servicios profesionales",
     img: projVioleta,
+    url: "https://terapiaconvioleta.com",
+    description:
+      "Página profesional de servicios de terapia, diseñada para presentar el enfoque de atención, generar confianza y facilitar el contacto con pacientes.",
     chips: ["Perfil profesional", "Psicoterapia", "Evaluaciones", "Talleres", "Recursos", "Agenda"],
-    cta: "Ver proyecto real",
+    cta: "Ver página",
   },
   {
     slug: "aeme",
     name: "AEME — Alianza Empresarial",
     category: "Asesoría empresarial · Sitio corporativo",
     img: projAeme,
+    url: "https://preview--aeme-alianza-empresarial.lovable.app/",
+    description:
+      "Página institucional para una alianza empresarial, con presentación de servicios, objetivos, información organizacional y medios de contacto.",
     chips: ["Servicios", "Proceso", "Sectores", "Recursos", "Trayectoria", "WhatsApp"],
-    cta: "Ver proyecto real",
+    cta: "Ver página",
   },
   {
     slug: "fiesta",
     name: "Tu Fiesta Fácil",
     category: "Aplicación web · Herramienta para negocio",
     img: projFiesta,
+    url: "https://preview--tu-fiesta-facil.lovable.app/",
+    description:
+      "Página comercial para presentar servicios y soluciones para fiestas, con información organizada, imágenes y botones de contacto.",
     chips: ["Inventario", "Presupuestos", "Pedidos", "Clientes", "Estadísticas"],
-    cta: "Ver herramienta",
+    cta: "Ver página",
     badge: "Aplicación web",
     variant: "tool",
+  },
+  {
+    slug: "qi",
+    name: "Qi Flow Hands",
+    category: "Bienestar · Terapias corporales",
+    img: projQi,
+    url: "https://qi-flow-hands.lovable.app",
+    description:
+      "Sitio de bienestar y terapias corporales con una identidad visual cálida, información sobre servicios y acceso directo a medios de contacto.",
+    chips: ["Terapias", "Horarios", "Ubicación", "WhatsApp"],
+    cta: "Ver página",
   },
 ];
 
@@ -1031,6 +1066,7 @@ function ProyectoCard({ p, onPreview }: { p: Proyecto; onPreview: () => void }) 
       <div className="p-7">
         <Eyebrow>{p.category}</Eyebrow>
         <h3 className="mt-2 font-display text-[24px] tracking-tight">{p.name}</h3>
+        <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
         <div className="mt-4 flex flex-wrap gap-1.5">
           {p.chips.map((c) => (
             <span
@@ -1043,12 +1079,12 @@ function ProyectoCard({ p, onPreview }: { p: Proyecto; onPreview: () => void }) 
         </div>
         <div className="mt-6 flex flex-wrap items-center gap-4">
           <a
-            href="#"
+            href={p.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-brand hover:text-foreground transition-colors"
           >
-            {p.cta} <ExternalLink className="h-3.5 w-3.5" />
+            Ver página <ExternalLink className="h-3.5 w-3.5" />
           </a>
           <button
             onClick={onPreview}
@@ -1133,17 +1169,29 @@ function PreviewModal({ p, onClose }: { p: Proyecto; onClose: () => void }) {
           </div>
         </div>
 
+        {p.gallery && p.gallery.length > 1 && (
+          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
+            {p.gallery.map((g, i) => (
+              <div key={i} className="overflow-hidden rounded-xl border hairline bg-background aspect-[16/10]">
+                <img src={g} alt={`${p.name} — vista ${i + 1}`} className="h-full w-full object-cover object-top" />
+              </div>
+            ))}
+          </div>
+        )}
+
+        <p className="mt-5 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
+
         <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
           <p className="text-[13px] text-ink-soft">
             Proyecto: <span className="text-foreground font-medium">{p.name}</span>
           </p>
           <a
-            href="#"
+            href={p.url}
             target="_blank"
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-foreground hover:bg-foreground transition-colors"
           >
-            Visitar proyecto real <ExternalLink className="h-3.5 w-3.5" />
+            Ver página <ExternalLink className="h-3.5 w-3.5" />
           </a>
         </div>
       </motion.div>
@@ -1319,6 +1367,7 @@ const PAQUETES: Paquete[] = [
       "Formas de contacto",
       "Botón de WhatsApp",
       "Hasta 2 rondas de ajustes antes de publicar",
+      "Dominio .com incluido durante el primer año",
     ],
     cta: "Quiero comenzar",
   },
@@ -1332,6 +1381,7 @@ const PAQUETES: Paquete[] = [
       "Todo lo incluido en Vitrina Inicial",
       "Hasta 5 rondas de ajustes antes de publicar",
       "Más oportunidades para afinar textos, fotografías, orden de secciones y detalles visuales",
+      "Dominio .com incluido durante el primer año",
     ],
     cta: "Quiero Vitrina Pro",
     featured: true,
@@ -1399,6 +1449,13 @@ function Paquetes() {
                 Si necesitas una <span className="text-foreground font-semibold">función especial</span>,
                 primero revisamos si podemos implementarla y te indicamos alcance
                 y costo antes de comenzar.
+              </p>
+              <p className="text-[13.5px] text-ink-soft leading-relaxed sm:col-span-2">
+                <span className="text-foreground font-semibold">Dominio .com:</span>{" "}
+                el precio de ambos paquetes incluye el registro y la configuración
+                del dominio .com por un año. La renovación del dominio después del
+                primer año se cotiza por separado. El hosting y mantenimiento no
+                están incluidos.
               </p>
             </div>
           </div>
@@ -1785,7 +1842,7 @@ function Footer() {
             </p>
           </div>
           <FooterCol title="Paquetes" items={["Vitrina Inicial", "Vitrina Pro", "Actualizaciones", "Herramientas a medida"]} />
-          <FooterCol title="Proyectos" items={["La Florida Ecoturístico", "Terapia con Violeta", "AEME Empresarial", "Tu Fiesta Fácil"]} />
+          <FooterCol title="Proyectos" items={["La Florida Paraíso Ecoturístico", "Terapia con Violeta", "AEME — Alianza Empresarial", "Tu Fiesta Fácil", "Qi Flow Hands"]} />
           <div>
             <h4 className="eyebrow">Contacto</h4>
             <ul className="mt-4 space-y-3 text-[14px] text-ink-soft">
