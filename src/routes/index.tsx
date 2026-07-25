@@ -922,6 +922,9 @@ type Proyecto = {
   name: string;
   category: string;
   img: string;
+  gallery?: string[];
+  url: string;
+  description: string;
   chips: string[];
   cta: string;
   badge?: string;
@@ -934,34 +937,58 @@ const PROYECTOS: Proyecto[] = [
     name: "La Florida Paraíso Ecoturístico",
     category: "Ecoturismo · Hospedaje",
     img: projFlorida,
+    gallery: [projFlorida, projFloridaFicha],
+    url: "https://lafloridaparaisoecoturistico.com",
+    description:
+      "Sitio web para un proyecto ecoturístico ubicado en la región de Lagos de Montebello, con información sobre hospedaje, naturaleza, experiencias y formas de contacto.",
     chips: ["Cabañas", "Tarifas", "Galería", "Cómo llegar", "FAQ", "Reservas por WhatsApp"],
-    cta: "Ver proyecto real",
+    cta: "Ver página",
   },
   {
     slug: "violeta",
     name: "Terapia con Violeta",
     category: "Psicología · Servicios profesionales",
     img: projVioleta,
+    url: "https://terapiaconvioleta.com",
+    description:
+      "Página profesional de servicios de terapia, diseñada para presentar el enfoque de atención, generar confianza y facilitar el contacto con pacientes.",
     chips: ["Perfil profesional", "Psicoterapia", "Evaluaciones", "Talleres", "Recursos", "Agenda"],
-    cta: "Ver proyecto real",
+    cta: "Ver página",
   },
   {
     slug: "aeme",
     name: "AEME — Alianza Empresarial",
     category: "Asesoría empresarial · Sitio corporativo",
     img: projAeme,
+    url: "https://preview--aeme-alianza-empresarial.lovable.app/",
+    description:
+      "Página institucional para una alianza empresarial, con presentación de servicios, objetivos, información organizacional y medios de contacto.",
     chips: ["Servicios", "Proceso", "Sectores", "Recursos", "Trayectoria", "WhatsApp"],
-    cta: "Ver proyecto real",
+    cta: "Ver página",
   },
   {
     slug: "fiesta",
     name: "Tu Fiesta Fácil",
     category: "Aplicación web · Herramienta para negocio",
     img: projFiesta,
+    url: "https://preview--tu-fiesta-facil.lovable.app/",
+    description:
+      "Página comercial para presentar servicios y soluciones para fiestas, con información organizada, imágenes y botones de contacto.",
     chips: ["Inventario", "Presupuestos", "Pedidos", "Clientes", "Estadísticas"],
-    cta: "Ver herramienta",
+    cta: "Ver página",
     badge: "Aplicación web",
     variant: "tool",
+  },
+  {
+    slug: "qi",
+    name: "Qi Flow Hands",
+    category: "Bienestar · Terapias corporales",
+    img: projQi,
+    url: "https://qi-flow-hands.lovable.app",
+    description:
+      "Sitio de bienestar y terapias corporales con una identidad visual cálida, información sobre servicios y acceso directo a medios de contacto.",
+    chips: ["Terapias", "Horarios", "Ubicación", "WhatsApp"],
+    cta: "Ver página",
   },
 ];
 
