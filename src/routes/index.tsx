@@ -38,18 +38,12 @@ import {
   GripVertical,
 } from "lucide-react";
 
-import projFloridaAsset from "@/assets/la-florida-01-dispositivos.png.asset.json";
-import projFloridaFichaAsset from "@/assets/la-florida-02-ficha-editorial.png.asset.json";
-import projVioletaAsset from "@/assets/terapia-violeta-01-dispositivos.png.asset.json";
-import projAemeAsset from "@/assets/aeme-01-dispositivos.png.asset.json";
-import projFiestaAsset from "@/assets/tu-fiesta-facil-02-ficha-editorial.png.asset.json";
-import projQiAsset from "@/assets/el-camino-del-qi-02-ficha-editorial.png.asset.json";
-const projFlorida = projFloridaAsset.url;
-const projFloridaFicha = projFloridaFichaAsset.url;
-const projVioleta = projVioletaAsset.url;
-const projAeme = projAemeAsset.url;
-const projFiesta = projFiestaAsset.url;
-const projQi = projQiAsset.url;
+import projFlorida from "@/assets/la-florida-01-dispositivos.jpg";
+import projFloridaFicha from "@/assets/la-florida-02-ficha-editorial.jpg";
+import projVioleta from "@/assets/terapia-violeta-01-dispositivos.jpg";
+import projAeme from "@/assets/aeme-01-dispositivos.jpg";
+import projFiesta from "@/assets/tu-fiesta-facil-02-ficha-editorial.jpg";
+import projQi from "@/assets/el-camino-del-qi-02-ficha-editorial.jpg";
 import exCabanas from "@/assets/ex-cabanas.jpg";
 import exPsicologa from "@/assets/ex-psicologa.jpg";
 import exRestaurante from "@/assets/ex-restaurante.jpg";
