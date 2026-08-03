@@ -1,6 +1,6 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useMemo, useRef, useState, type ReactNode } from "react";
-import { motion, AnimatePresence, useReducedMotion, useScroll, useTransform } from "framer-motion";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import { motion, AnimatePresence, useReducedMotion } from "framer-motion";
 import Lenis from "lenis";
 import {
   Menu,
@@ -8,35 +8,34 @@ import {
   MessageCircle,
   ArrowRight,
   Check,
-  ShieldCheck,
-  Sparkles,
   MapPin,
-  Phone,
-  Share2,
-  TrendingUp,
   Instagram,
   Facebook,
-  Mail,
-  Star,
   Quote,
-  ChevronRight,
   Monitor,
   Smartphone,
   ExternalLink,
-  Send,
   Home,
   Stethoscope,
   UtensilsCrossed,
   Store,
   Briefcase,
   MoreHorizontal,
-  Package,
-  FileText,
-  ShoppingCart,
-  Users,
-  BarChart3,
-  GripVertical,
+  Images,
+  Clock,
+  Star,
+  HelpCircle,
+  Share2,
+  Search,
+  Map as MapIcon,
+  Wrench,
 } from "lucide-react";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
 
 import projFlorida from "@/assets/la-florida-01-dispositivos.jpg";
 import projFloridaFicha from "@/assets/la-florida-02-ficha-editorial.jpg";
@@ -44,44 +43,150 @@ import projVioleta from "@/assets/terapia-violeta-01-dispositivos.jpg";
 import projAeme from "@/assets/aeme-01-dispositivos.jpg";
 import projFiesta from "@/assets/tu-fiesta-facil-02-ficha-editorial.jpg";
 import projQi from "@/assets/el-camino-del-qi-02-ficha-editorial.jpg";
-import exCabanas from "@/assets/ex-cabanas.jpg";
-import exPsicologa from "@/assets/ex-psicologa.jpg";
-import exRestaurante from "@/assets/ex-restaurante.jpg";
-import exTienda from "@/assets/ex-tienda.jpg";
+
+/* ───────────────────────────── datos ───────────────────────────── */
+
+const WA_BASE = "https://wa.me/529612559561";
+const wa = (msg: string) => `${WA_BASE}?text=${encodeURIComponent(msg)}`;
+
+const WA = {
+  hero: wa("Hola, vi su página y quiero saber cómo podría verse mi negocio en internet."),
+  inicial: wa("Hola, me interesa el paquete Vitrina Inicial de $1,000 MXN."),
+  pro: wa("Hola, me interesa el paquete Vitrina Pro de $1,300 MXN."),
+  portafolio: wa("Hola, vi sus proyectos y quiero saber qué tipo de página recomiendan para mi negocio."),
+  especial: wa("Hola, necesito una función o herramienta especial para mi negocio y quisiera saber si pueden desarrollarla."),
+  actualizacion: wa("Hola, ya tengo una página y necesito solicitar una actualización."),
+  flotante: wa("Hola, quiero información sobre las páginas de Mi Vitrina Digital."),
+};
+
+const FAQ = [
+  {
+    q: "¿Qué necesito enviar para comenzar?",
+    a: "Fotografías, logotipo si lo tienes, información de tu negocio, servicios, horarios, ubicación y datos de contacto. Si tu material está incompleto, te ayudamos a ordenarlo, mejorarlo y redactarlo.",
+  },
+  {
+    q: "¿Cuánto tarda la creación?",
+    a: "El tiempo estimado es de 3 a 5 días naturales, contados a partir de que recibimos el material necesario.",
+  },
+  {
+    q: "¿Qué es una ronda de ajustes?",
+    a: "Una ronda de ajustes es un conjunto de cambios reunidos y enviados en una sola ocasión. Vitrina Inicial incluye hasta 2 rondas y Vitrina Pro hasta 5, antes de publicar.",
+  },
+  {
+    q: "¿El dominio está incluido?",
+    a: "Sí. Ambos paquetes incluyen el dominio .com durante el primer año.",
+  },
+  {
+    q: "¿El alojamiento está incluido?",
+    a: "Sí. El alojamiento también está incluido durante el primer año, por lo que tu página permanece publicada durante ese periodo.",
+  },
+  {
+    q: "¿Qué sucede después del primer año?",
+    a: "Puedes solicitar la renovación con Mi Vitrina Digital o realizarla por tu cuenta. También puedes mover tu página si así lo prefieres.",
+  },
+  {
+    q: "¿Recibiré los accesos de mi página?",
+    a: "Sí. Te entregamos las llaves o accesos necesarios para que tengas control sobre tu proyecto.",
+  },
+  {
+    q: "¿Puedo solicitar modificaciones después?",
+    a: "Sí. Las actualizaciones sencillas tienen un costo desde $200 MXN por solicitud: horarios, fotografías, teléfono, precios, textos o dirección.",
+  },
+  {
+    q: "¿Qué no está incluido en los paquetes?",
+    a: "No están incluidas las aplicaciones, sistemas, automatizaciones ni integraciones especiales. Tampoco los rediseños, nuevas páginas o nuevas secciones posteriores a la publicación: se revisan y cotizan antes de comenzar.",
+  },
+  {
+    q: "¿Pueden crear funciones especiales?",
+    a: "Primero revisamos si podemos implementarla y te explicamos el alcance y el costo. No prometemos desarrollar cualquier sistema sin revisarlo antes.",
+  },
+  {
+    q: "¿Trabajan solamente en San Cristóbal?",
+    a: "No. Partimos de San Cristóbal de Las Casas, Chiapas, y atendemos clientes de México, Estados Unidos y otros países. Todo el proceso puede realizarse a distancia.",
+  },
+  {
+    q: "¿Cómo se realiza el pago?",
+    a: "50% para iniciar y 50% antes de publicar. El anticipo inicial no es reembolsable, ya que se utiliza para adquirir el dominio y el alojamiento y para comenzar el trabajo. Los datos de pago se proporcionan por WhatsApp.",
+  },
+];
+
+const NAV = [
+  { label: "Inicio", href: "#inicio" },
+  { label: "Proyectos", href: "#proyectos" },
+  { label: "Qué incluye", href: "#incluye" },
+  { label: "Precios", href: "#precios" },
+  { label: "Proceso", href: "#proceso" },
+  { label: "Preguntas frecuentes", href: "#faq" },
+];
+
+const spring = { type: "spring" as const, stiffness: 220, damping: 26, mass: 0.6 };
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Mi Vitrina Digital · Vitrina Pro — Páginas web para negocios" },
-      { name: "description", content: "Tu negocio ya está en redes. Ahora dale una vitrina profesional. Diseñamos páginas web reales para negocios locales, con estilo boutique y contacto directo por WhatsApp." },
-      { property: "og:title", content: "Mi Vitrina Digital · Vitrina Pro" },
-      { property: "og:description", content: "Páginas web profesionales para negocios locales. Proyectos reales, precios claros y WhatsApp directo." },
+      { title: "Páginas web profesionales desde $1,000 MXN | Vitrina Pro" },
+      {
+        name: "description",
+        content:
+          "Creamos páginas web profesionales y accesibles para negocios de México, Estados Unidos y otros países. Dominio y alojamiento incluidos durante el primer año.",
+      },
+      { property: "og:title", content: "Páginas web profesionales desde $1,000 MXN | Vitrina Pro" },
+      {
+        property: "og:description",
+        content:
+          "Mi Vitrina Digital · Vitrina Pro. Páginas profesionales a precio accesible, con dominio y alojamiento incluidos el primer año.",
+      },
       { property: "og:type", content: "website" },
       { name: "twitter:card", content: "summary_large_image" },
+    ],
+    scripts: [
+      {
+        type: "application/ld+json",
+        children: JSON.stringify({
+          "@context": "https://schema.org",
+          "@graph": [
+            {
+              "@type": "ProfessionalService",
+              name: "Mi Vitrina Digital · Vitrina Pro",
+              description:
+                "Creación de páginas web profesionales y accesibles para negocios, profesionistas y prestadores de servicios.",
+              telephone: "+529612559561",
+              areaServed: ["MX", "US"],
+              address: {
+                "@type": "PostalAddress",
+                addressLocality: "San Cristóbal de Las Casas",
+                addressRegion: "Chiapas",
+                addressCountry: "MX",
+              },
+              offers: {
+                "@type": "Offer",
+                price: "1000",
+                priceCurrency: "MXN",
+                name: "Vitrina Inicial",
+              },
+            },
+            {
+              "@type": "FAQPage",
+              mainEntity: FAQ.map((f) => ({
+                "@type": "Question",
+                name: f.q,
+                acceptedAnswer: { "@type": "Answer", text: f.a },
+              })),
+            },
+          ],
+        }),
+      },
     ],
   }),
   component: Index,
 });
 
-/* ───────────────────────────── helpers ───────────────────────────── */
-
-const WHATSAPP_URL =
-  "https://wa.me/529612559561?text=Hola%2C%20vi%20la%20p%C3%A1gina%20de%20Mi%20Vitrina%20Digital%20y%20quiero%20informaci%C3%B3n%20para%20crear%20mi%20p%C3%A1gina%20web.";
-
-const NAV = [
-  { label: "Inicio", href: "#inicio" },
-  { label: "Proyectos", href: "#proyectos" },
-  { label: "Paquetes", href: "#paquetes" },
-  { label: "Proceso", href: "#proceso" },
-  { label: "Contacto", href: "#contacto" },
-];
-
-const spring = { type: "spring" as const, stiffness: 220, damping: 26, mass: 0.6 };
+/* ───────────────────────────── utilidades UI ───────────────────────────── */
 
 function Reveal({
   children,
   delay = 0,
-  y = 16,
+  y = 14,
   className = "",
 }: {
   children: ReactNode;
@@ -95,7 +200,7 @@ function Reveal({
       initial={reduce ? false : { opacity: 0, y }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
-      transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1], delay }}
+      transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1], delay }}
       className={className}
     >
       {children}
@@ -107,13 +212,12 @@ function Eyebrow({ children, className = "" }: { children: ReactNode; className?
   return <span className={`eyebrow ${className}`}>{children}</span>;
 }
 
-/* ───────────────────────────── page ───────────────────────────── */
+/* ───────────────────────────── página ───────────────────────────── */
 
 function Index() {
   useEffect(() => {
     if (typeof window === "undefined") return;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduce) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
     const lenis = new Lenis({ duration: 1.05, smoothWheel: true });
     let raf = 0;
     const loop = (t: number) => {
@@ -128,22 +232,19 @@ function Index() {
   }, []);
 
   return (
-    <div className="min-h-screen bg-background text-foreground antialiased selection:bg-brand/20">
-      <AnnouncementBar />
+    <div className="min-h-screen overflow-x-hidden bg-background text-foreground antialiased selection:bg-brand/20">
       <Header />
       <main id="inicio">
         <Hero />
-        <Problema />
-        <Beneficios />
-        <SelectorNegocio />
-        <AntesDespues />
-        <FlujoRedesWebWhatsapp />
         <Proyectos />
-        <FranjaHerramienta />
-        <Paquetes />
+        <QueIncluye />
+        <SelectorNegocio />
+        <FlujoRedesWebWhatsapp />
+        <Precios />
         <Proceso />
-        <DemoWhatsapp />
+        <HerramientasWeb />
         <Testimonios />
+        <Preguntas />
         <CtaFinal />
       </main>
       <Footer />
@@ -153,16 +254,6 @@ function Index() {
 }
 
 /* ───────────────────────────── chrome ───────────────────────────── */
-
-function AnnouncementBar() {
-  return (
-    <div className="w-full bg-ink text-background text-[12px] tracking-wide">
-      <div className="mx-auto max-w-7xl px-4 py-2 text-center">
-        Tu negocio merece verse profesional en internet.
-      </div>
-    </div>
-  );
-}
 
 function Logo() {
   return (
@@ -214,12 +305,12 @@ function Header() {
     >
       <div className="mx-auto flex max-w-7xl items-center justify-between px-4 py-3 sm:px-6 lg:px-8">
         <Logo />
-        <nav className="hidden lg:flex items-center gap-8">
+        <nav className="hidden lg:flex items-center gap-7">
           {NAV.map((n) => (
             <a
               key={n.href}
               href={n.href}
-              className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-soft hover:text-foreground transition-colors"
+              className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-soft hover:text-foreground transition-colors"
             >
               {n.label}
             </a>
@@ -227,11 +318,22 @@ function Header() {
         </nav>
         <div className="flex items-center gap-2">
           <a
-            href={WHATSAPP_URL}
+            href={WA.hero}
+            target="_blank"
+            rel="noopener noreferrer"
             className="hidden sm:inline-flex items-center gap-2 rounded-full bg-foreground px-5 py-2.5 text-[12px] font-semibold uppercase tracking-[0.14em] text-background transition-transform hover:-translate-y-0.5 hover:bg-brand"
           >
             Quiero mi página
             <ArrowRight className="h-3.5 w-3.5" />
+          </a>
+          <a
+            href={WA.flotante}
+            target="_blank"
+            rel="noopener noreferrer"
+            aria-label="Escribir por WhatsApp"
+            className="sm:hidden inline-flex h-10 w-10 items-center justify-center rounded-full bg-trust text-trust-foreground"
+          >
+            <MessageCircle className="h-4 w-4" />
           </a>
           <button
             onClick={() => setOpen((v) => !v)}
@@ -246,6 +348,7 @@ function Header() {
         <motion.div
           initial={{ opacity: 0, y: -6 }}
           animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.28 }}
           className="lg:hidden border-t hairline bg-background"
         >
           <div className="mx-auto max-w-7xl px-4 py-4 flex flex-col gap-1">
@@ -260,7 +363,9 @@ function Header() {
               </a>
             ))}
             <a
-              href={WHATSAPP_URL}
+              href={WA.hero}
+              target="_blank"
+              rel="noopener noreferrer"
               onClick={() => setOpen(false)}
               className="mt-2 inline-flex items-center justify-center gap-2 rounded-full bg-foreground px-5 py-3 text-[12px] font-semibold uppercase tracking-[0.14em] text-background"
             >
@@ -277,9 +382,12 @@ function Header() {
 function WhatsappFab() {
   return (
     <a
-      href={WHATSAPP_URL}
+      href={WA.flotante}
+      target="_blank"
+      rel="noopener noreferrer"
       aria-label="Escríbenos por WhatsApp"
-      className="fixed bottom-5 right-5 z-50 inline-flex items-center gap-2 rounded-full bg-trust px-4 py-3 text-trust-foreground shadow-lg shadow-trust/30 transition-transform hover:-translate-y-0.5 hover:scale-[1.02]"
+      style={{ bottom: "calc(1.25rem + env(safe-area-inset-bottom))" }}
+      className="fixed right-4 z-50 inline-flex items-center gap-2 rounded-full bg-trust px-4 py-3 text-trust-foreground shadow-lg shadow-trust/30 transition-transform hover:-translate-y-0.5"
     >
       <MessageCircle className="h-5 w-5" />
       <span className="hidden sm:inline text-[12px] font-semibold uppercase tracking-[0.14em]">
@@ -292,21 +400,22 @@ function WhatsappFab() {
 /* ───────────────────────────── 01 hero ───────────────────────────── */
 
 const HERO_SLIDES = [
-  { img: projFlorida, label: "Turismo", name: "La Florida · Ecoturismo" },
-  { img: projVioleta, label: "Profesionistas", name: "Psic. Violeta Guillén" },
-  { img: projAeme, label: "Empresas", name: "AEME · Alianza Empresarial" },
-  { img: projFiesta, label: "Herramientas web", name: "Tu Fiesta Fácil" },
+  { img: projFlorida, label: "Turismo", name: "La Florida Paraíso Ecoturístico" },
+  { img: projVioleta, label: "Servicios profesionales", name: "Terapia con Violeta" },
+  { img: projAeme, label: "Empresas", name: "AEME — Alianza Empresarial" },
+  { img: projQi, label: "Bienestar", name: "Qi Flow Hands" },
 ];
 
 function Hero() {
   const reduce = useReducedMotion();
   const [idx, setIdx] = useState(0);
+  const [paused, setPaused] = useState(false);
 
   useEffect(() => {
-    if (reduce) return;
+    if (reduce || paused) return;
     const t = setInterval(() => setIdx((i) => (i + 1) % HERO_SLIDES.length), 4500);
     return () => clearInterval(t);
-  }, [reduce]);
+  }, [reduce, paused]);
 
   const slide = HERO_SLIDES[idx];
 
@@ -322,52 +431,52 @@ function Hero() {
           maskImage: "radial-gradient(ellipse at 50% 0%, black 30%, transparent 75%)",
         }}
       />
-      <div className="relative mx-auto max-w-7xl px-4 pt-14 pb-20 sm:px-6 lg:px-8 lg:pt-20 lg:pb-28">
-        <div className="grid items-center gap-14 lg:grid-cols-[1.05fr_1.1fr]">
+      <div className="relative mx-auto max-w-7xl px-4 pt-12 pb-16 sm:px-6 lg:px-8 lg:pt-18 lg:pb-24">
+        <div className="grid items-center gap-12 lg:grid-cols-[1.05fr_1.1fr]">
           <div>
             <Reveal>
-              <div className="inline-flex items-center gap-2 rounded-full border hairline bg-background/70 px-3 py-1.5">
-                <span className="h-1.5 w-1.5 rounded-full bg-trust animate-pulse" />
-                <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-ink-soft">
-                  Estudio boutique de páginas web
-                </span>
-              </div>
+              <Eyebrow>Páginas web para negocios y profesionistas</Eyebrow>
             </Reveal>
 
             <Reveal delay={0.05}>
-              <h1 className="mt-6 font-display text-[40px] leading-[1.05] tracking-tight sm:text-[56px] lg:text-[68px]">
+              <h1 className="mt-5 font-display text-[34px] leading-[1.06] tracking-tight sm:text-[52px] lg:text-[62px]">
                 Tu negocio ya está en redes.
                 <br />
                 Ahora dale una{" "}
-                <span className="relative inline-block">
-                  <span className="relative z-10 text-brand">vitrina profesional.</span>
-                  <motion.span
-                    aria-hidden
-                    initial={{ scaleX: 0 }}
-                    whileInView={{ scaleX: 1 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1], delay: 0.4 }}
-                    className="absolute left-0 bottom-1 sm:bottom-2 h-[6px] w-full origin-left rounded-full bg-brand/15"
-                  />
-                </span>
+                <span className="text-brand">vitrina profesional.</span>
               </h1>
             </Reveal>
 
             <Reveal delay={0.1}>
-              <p className="mt-6 max-w-xl text-[17px] leading-relaxed text-ink-soft">
-                Creamos páginas web reales para negocios reales: ecoturismo,
-                profesionistas, empresas y herramientas a medida. Cada proyecto
-                se piensa para lo que ese negocio realmente necesita.
+              <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-ink-soft">
+                Creamos páginas rápidas, profesionales y fáciles de contactar para
+                negocios de México, Estados Unidos y cualquier parte del mundo.
               </p>
             </Reveal>
 
             <Reveal delay={0.15}>
-              <div className="mt-8 flex flex-wrap items-center gap-3">
+              <div className="mt-7 inline-flex flex-col gap-1 rounded-2xl border border-brand/30 bg-brand/8 px-5 py-4">
+                <span className="font-display text-[30px] font-semibold leading-none tracking-tight text-brand sm:text-[34px]">
+                  Desde $1,000 MXN
+                </span>
+                <span className="text-[13.5px] text-ink-soft">
+                  Dominio .com y alojamiento incluidos durante el primer año.
+                </span>
+                <span className="text-[12px] text-ink-soft/80">
+                  Entrega estimada de 3 a 5 días naturales.
+                </span>
+              </div>
+            </Reveal>
+
+            <Reveal delay={0.2}>
+              <div className="mt-7 flex flex-wrap items-center gap-3">
                 <a
-                  href={WHATSAPP_URL}
+                  href={WA.hero}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-brand-foreground shadow-[0_10px_30px_-12px_rgba(124,137,98,0.55)] transition-transform hover:-translate-y-0.5 hover:bg-[#6b7855]"
                 >
-                  Quiero mi página web
+                  Quiero ver cómo podría verse mi negocio
                   <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-0.5" />
                 </a>
                 <a
@@ -380,22 +489,23 @@ function Hero() {
             </Reveal>
 
             <Reveal delay={0.25}>
-              <div className="mt-10 flex flex-wrap items-center gap-x-6 gap-y-3 text-[12px] text-ink-soft">
-                <span className="inline-flex items-center gap-2">
-                  <ShieldCheck className="h-4 w-4 text-trust" /> Proyectos publicados
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <MessageCircle className="h-4 w-4 text-trust" /> Contacto por WhatsApp
-                </span>
-                <span className="inline-flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-brand" /> Diseño editorial
-                </span>
-              </div>
+              <ul className="mt-8 flex flex-wrap items-center gap-x-5 gap-y-2 text-[12.5px] text-ink-soft">
+                {[
+                  "Adaptable a celular",
+                  "WhatsApp integrado",
+                  "Dominio y alojamiento incluidos",
+                  "Accesos entregados al cliente",
+                ].map((t) => (
+                  <li key={t} className="inline-flex items-center gap-1.5">
+                    <Check className="h-3.5 w-3.5 text-brand" strokeWidth={3} />
+                    {t}
+                  </li>
+                ))}
+              </ul>
             </Reveal>
           </div>
 
-          {/* Rotating mockup */}
-          <Reveal delay={0.15} y={24}>
+          <Reveal delay={0.12} y={20}>
             <div className="relative">
               <div className="relative rounded-[28px] border hairline bg-background p-3 shadow-[0_30px_80px_-30px_rgba(30,30,30,0.25)]">
                 <div className="relative overflow-hidden rounded-[20px] bg-surface aspect-[5/4]">
@@ -403,29 +513,31 @@ function Hero() {
                     <motion.img
                       key={idx}
                       src={slide.img}
-                      alt={slide.name}
+                      alt={`Captura real del sitio web de ${slide.name}`}
                       width={1280}
                       height={1024}
-                      initial={{ opacity: 0, scale: 1.02 }}
-                      animate={{ opacity: 1, scale: 1 }}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
                       exit={{ opacity: 0 }}
-                      transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
+                      transition={{ duration: 0.6, ease: [0.22, 1, 0.36, 1] }}
                       className="absolute inset-0 h-full w-full object-cover"
                     />
                   </AnimatePresence>
-                  <div className="absolute left-4 bottom-4 rounded-full bg-background/90 backdrop-blur px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground border hairline">
+                  <div className="absolute left-4 bottom-4 rounded-full border hairline bg-background/90 px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] text-foreground backdrop-blur">
                     {slide.name}
                   </div>
                 </div>
               </div>
 
-              {/* Manual indicators + labels */}
               <div className="mt-5 flex flex-wrap items-center justify-center gap-2">
                 {HERO_SLIDES.map((s, i) => (
                   <button
                     key={s.label}
-                    onClick={() => setIdx(i)}
-                    aria-label={`Mostrar ${s.label}`}
+                    onClick={() => {
+                      setIdx(i);
+                      setPaused(true);
+                    }}
+                    aria-label={`Mostrar ${s.name}`}
                     className={`inline-flex items-center gap-2 rounded-full border px-3 py-1.5 text-[11px] font-semibold uppercase tracking-[0.14em] transition-all ${
                       i === idx
                         ? "border-brand bg-brand text-brand-foreground"
@@ -448,156 +560,371 @@ function Hero() {
   );
 }
 
-/* ───────────────────────────── 02 problema ───────────────────────────── */
+/* ───────────────────────────── 02 portafolio ───────────────────────────── */
 
-function Problema() {
-  const items = [
-    { n: "01", title: "Me preguntan siempre lo mismo", desc: "Horarios, precios, ubicación y servicios pueden estar claros en tu página." },
-    { n: "02", title: "Mi negocio se ve poco formal", desc: "Una web profesional ayuda a que el cliente te perciba como una opción más seria y confiable." },
-    { n: "03", title: "Mis redes no están ordenadas", desc: "Tu página funciona como el centro de tu presencia digital: redes, WhatsApp, mapa y catálogo." },
-  ];
+type Proyecto = {
+  slug: string;
+  name: string;
+  category: string;
+  img: string;
+  mobileImg?: string;
+  url: string;
+  description: string;
+  cta: string;
+  badge?: string;
+  nota?: string;
+};
+
+const PROYECTOS: Proyecto[] = [
+  {
+    slug: "florida",
+    name: "La Florida Paraíso Ecoturístico",
+    category: "Ecoturismo y hospedaje",
+    img: projFlorida,
+    mobileImg: projFloridaFicha,
+    url: "https://lafloridaparaisoecoturistico.com/",
+    description:
+      "Sitio para un proyecto ecoturístico: presenta el lugar, sus espacios y experiencias, con contacto directo por WhatsApp.",
+    cta: "Visitar página real ↗",
+  },
+  {
+    slug: "violeta",
+    name: "Terapia con Violeta",
+    category: "Psicología y servicios profesionales",
+    img: projVioleta,
+    url: "https://terapiaconvioleta.com/",
+    description:
+      "Página profesional de servicios de terapia, pensada para presentar el enfoque de atención y facilitar el contacto.",
+    cta: "Visitar página real ↗",
+  },
+  {
+    slug: "aeme",
+    name: "AEME — Alianza Empresarial",
+    category: "Servicios empresariales",
+    img: projAeme,
+    url: "https://aeme-alianza-empresarial.lovable.app/",
+    description:
+      "Página institucional que organiza la presentación de la alianza, sus servicios y sus medios de contacto.",
+    cta: "Visitar página real ↗",
+  },
+  {
+    slug: "qi",
+    name: "Qi Flow Hands",
+    category: "Bienestar y terapias",
+    img: projQi,
+    url: "https://qi-flow-hands.lovable.app/",
+    description:
+      "Sitio de bienestar y terapias con una presentación cálida de los servicios y acceso directo al contacto.",
+    cta: "Visitar página real ↗",
+  },
+  {
+    slug: "fiesta",
+    name: "Tu Fiesta Fácil",
+    category: "Aplicación web / proyecto especial",
+    img: projFiesta,
+    url: "https://tu-fiesta-facil.lovable.app/",
+    description:
+      "Proyecto especial con funciones que van más allá de una página informativa.",
+    cta: "Ver herramienta real ↗",
+    badge: "Aplicación web",
+    nota: "Las funciones especiales, sistemas e integraciones se revisan y cotizan por separado.",
+  },
+];
+
+function Proyectos() {
+  const [preview, setPreview] = useState<Proyecto | null>(null);
   return (
-    <section className="bg-surface py-24 sm:py-28">
+    <section id="proyectos" className="bg-surface py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <Reveal><Eyebrow>El problema</Eyebrow></Reveal>
-        <div className="mt-4 grid gap-10 lg:grid-cols-[1.1fr_1fr] lg:items-end">
-          <Reveal delay={0.05}>
-            <h2 className="font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-              Instagram muestra tu negocio.
-              <br />
-              <span className="text-ink-soft">Tu página web lo presenta con claridad.</span>
-            </h2>
-          </Reveal>
-          <Reveal delay={0.12}>
-            <p className="text-[16px] leading-relaxed text-ink-soft lg:max-w-md">
-              Las redes sociales atraen atención, pero la información importante se
-              pierde entre publicaciones e historias. Una página web organiza todo
-              en un solo lugar: servicios, precios, ubicación, fotos y contacto.
-            </p>
-          </Reveal>
-        </div>
-
-        <div className="mt-14 grid gap-5 md:grid-cols-3">
-          {items.map((it, i) => (
-            <Reveal key={it.n} delay={i * 0.08}>
-              <motion.div
-                whileHover={{ y: -5 }}
-                transition={spring}
-                className="group h-full rounded-3xl border hairline bg-background p-7 hover:shadow-[0_20px_50px_-25px_rgba(30,30,30,0.25)] transition-shadow"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="eyebrow">{it.n}</span>
-                  <span className="h-8 w-8 rounded-full border hairline grid place-items-center text-ink-soft group-hover:bg-brand group-hover:text-brand-foreground group-hover:border-brand transition-colors">
-                    <ChevronRight className="h-4 w-4" />
-                  </span>
-                </div>
-                <h3 className="mt-6 font-display text-[22px] leading-snug tracking-tight">{it.title}</h3>
-                <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">{it.desc}</p>
-              </motion.div>
-            </Reveal>
-          ))}
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── 03 beneficios ───────────────────────────── */
-
-function Beneficios() {
-  const items = [
-    { icon: ShieldCheck, title: "Más formalidad", desc: "Tu negocio se percibe más serio y establecido." },
-    { icon: Sparkles, title: "Información clara", desc: "Todo lo importante en un solo enlace." },
-    { icon: Star, title: "Más confianza", desc: "Fotos, testimonios, servicios y ubicación bien presentados." },
-    { icon: MessageCircle, title: "Más contactos", desc: "Botones directos a WhatsApp, llamada, mapa y redes." },
-    { icon: Share2, title: "Mejor presentación", desc: "Comparte un link profesional en tarjetas, QR, Instagram o Facebook." },
-    { icon: TrendingUp, title: "Base para crecer", desc: "Después puedes agregar catálogo, reservas o funciones a medida." },
-  ];
-  return (
-    <section id="beneficios" className="py-24 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1fr_1.1fr] lg:items-end">
+        <div className="grid gap-6 lg:grid-cols-2 lg:items-end">
           <div>
-            <Reveal><Eyebrow>Beneficios</Eyebrow></Reveal>
+            <Reveal><Eyebrow>Portafolio</Eyebrow></Reveal>
             <Reveal delay={0.05}>
-              <h2 className="mt-4 font-display text-[32px] leading-[1.08] tracking-tight sm:text-[44px] lg:text-[54px]">
-                Convierte tus redes en una <span className="text-brand">presencia digital</span> más confiable.
+              <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[50px]">
+                Páginas reales que ya hemos creado.
               </h2>
             </Reveal>
           </div>
           <Reveal delay={0.1}>
-            <p className="text-[16px] leading-relaxed text-ink-soft lg:max-w-md">
-              Una página web no reemplaza tus redes. Las vuelve más fuertes:
-              ordena tu información, da confianza y abre nuevas formas de contacto.
+            <p className="text-[15.5px] leading-relaxed text-ink-soft lg:max-w-md">
+              Cada negocio tiene necesidades distintas. Organizamos la información
+              y diseñamos una experiencia adecuada para cada proyecto.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-14 grid gap-px overflow-hidden rounded-3xl border hairline bg-hairline sm:grid-cols-2 lg:grid-cols-3">
+        <div className="mt-12 grid gap-7 lg:grid-cols-2">
+          {PROYECTOS.map((p, i) => (
+            <Reveal key={p.slug} delay={(i % 2) * 0.06}>
+              <ProyectoCard p={p} onPreview={() => setPreview(p)} />
+            </Reveal>
+          ))}
+        </div>
+
+        <Reveal delay={0.1}>
+          <div className="mt-10 text-center">
+            <a
+              href={WA.portafolio}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 rounded-full border hairline bg-background px-6 py-3 text-[13px] font-semibold text-foreground hover:bg-brand hover:text-brand-foreground hover:border-brand transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" />
+              ¿Qué página recomiendan para mi negocio?
+            </a>
+          </div>
+        </Reveal>
+      </div>
+
+      <AnimatePresence>
+        {preview && <PreviewModal p={preview} onClose={() => setPreview(null)} />}
+      </AnimatePresence>
+    </section>
+  );
+}
+
+function ProyectoCard({ p, onPreview }: { p: Proyecto; onPreview: () => void }) {
+  const [hover, setHover] = useState(false);
+  return (
+    <motion.div
+      whileHover={{ y: -5 }}
+      transition={spring}
+      className="group flex h-full flex-col overflow-hidden rounded-3xl border hairline bg-background"
+      onMouseEnter={() => setHover(true)}
+      onMouseLeave={() => setHover(false)}
+    >
+      <div className="relative overflow-hidden bg-surface aspect-[16/10]">
+        <motion.img
+          src={p.img}
+          alt={`Captura real del sitio ${p.name}`}
+          loading="lazy"
+          width={1280}
+          height={800}
+          animate={{ y: hover ? "-18%" : "0%" }}
+          transition={{ duration: 3.2, ease: "easeInOut" }}
+          className="absolute inset-0 h-[130%] w-full object-cover object-top"
+        />
+        {p.badge && (
+          <span className="absolute left-4 top-4 rounded-full bg-trust px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-trust-foreground">
+            {p.badge}
+          </span>
+        )}
+      </div>
+      <div className="flex flex-1 flex-col p-6 sm:p-7">
+        <Eyebrow>{p.category}</Eyebrow>
+        <h3 className="mt-2 font-display text-[22px] leading-snug tracking-tight">{p.name}</h3>
+        <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
+        {p.nota && (
+          <p className="mt-3 rounded-xl bg-surface/70 px-3 py-2 text-[12.5px] leading-relaxed text-ink-soft">
+            {p.nota}
+          </p>
+        )}
+        <div className="mt-6 flex flex-wrap items-center gap-3 pt-0">
+          <a
+            href={p.url}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 rounded-full bg-brand px-4 py-2.5 text-[12.5px] font-semibold text-brand-foreground transition-colors hover:bg-foreground"
+          >
+            {p.cta}
+          </a>
+          <button
+            onClick={onPreview}
+            className="inline-flex items-center gap-1.5 rounded-full border hairline px-4 py-2.5 text-[12.5px] font-semibold text-foreground hover:bg-surface transition-colors"
+          >
+            Ver vista previa
+          </button>
+        </div>
+      </div>
+    </motion.div>
+  );
+}
+
+function PreviewModal({ p, onClose }: { p: Proyecto; onClose: () => void }) {
+  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
+    window.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => {
+      window.removeEventListener("keydown", onKey);
+      document.body.style.overflow = "";
+    };
+  }, [onClose]);
+
+  const src = device === "mobile" && p.mobileImg ? p.mobileImg : p.img;
+
+  return (
+    <motion.div
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{ duration: 0.25 }}
+      className="fixed inset-0 z-[60] flex items-center justify-center overflow-y-auto bg-ink/60 p-4 backdrop-blur-sm"
+      onClick={onClose}
+    >
+      <motion.div
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 8 }}
+        transition={spring}
+        onClick={(e) => e.stopPropagation()}
+        className="relative my-auto w-full max-w-3xl rounded-3xl border hairline bg-background p-4 shadow-[0_40px_100px_-30px_rgba(30,30,30,0.5)] sm:p-6"
+      >
+        <div className="flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <Eyebrow>{p.category}</Eyebrow>
+            <h3 className="mt-1 font-display text-[21px] leading-snug tracking-tight">{p.name}</h3>
+          </div>
+          <div className="flex items-center gap-2">
+            {p.mobileImg && (
+              <div className="inline-flex rounded-full border hairline bg-surface/60 p-1">
+                {(["desktop", "mobile"] as const).map((d) => (
+                  <button
+                    key={d}
+                    onClick={() => setDevice(d)}
+                    className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11.5px] font-semibold uppercase tracking-[0.14em] transition-colors ${
+                      device === d ? "bg-background text-foreground shadow-sm" : "text-ink-soft"
+                    }`}
+                  >
+                    {d === "desktop" ? <Monitor className="h-3.5 w-3.5" /> : <Smartphone className="h-3.5 w-3.5" />}
+                    {d === "desktop" ? "Escritorio" : "Móvil"}
+                  </button>
+                ))}
+              </div>
+            )}
+            <button
+              onClick={onClose}
+              aria-label="Cerrar vista previa"
+              className="inline-flex h-10 w-10 items-center justify-center rounded-full border hairline hover:bg-surface"
+            >
+              <X className="h-4 w-4" />
+            </button>
+          </div>
+        </div>
+
+        <div className="mt-5 flex justify-center rounded-2xl bg-surface p-3 sm:p-5">
+          <div className="w-full overflow-hidden rounded-xl border hairline bg-background">
+            <img
+              src={src}
+              alt={`Captura real del sitio ${p.name}`}
+              className="h-full w-full object-cover object-top"
+            />
+          </div>
+        </div>
+
+        <p className="mt-5 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
+
+        <a
+          href={p.url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="mt-5 inline-flex items-center gap-2 rounded-full bg-brand px-5 py-2.5 text-[12.5px] font-semibold text-brand-foreground transition-colors hover:bg-foreground"
+        >
+          {p.cta} <ExternalLink className="h-3.5 w-3.5" />
+        </a>
+      </motion.div>
+    </motion.div>
+  );
+}
+
+/* ───────────────────────────── 03 qué puede incluir ───────────────────────────── */
+
+function QueIncluye() {
+  const items = [
+    { icon: Briefcase, label: "Servicios" },
+    { icon: Images, label: "Galería" },
+    { icon: MapPin, label: "Dirección" },
+    { icon: MapIcon, label: "Mapa" },
+    { icon: Clock, label: "Horarios" },
+    { icon: Star, label: "Opiniones" },
+    { icon: HelpCircle, label: "Preguntas frecuentes" },
+    { icon: Share2, label: "Enlaces a redes" },
+    { icon: MessageCircle, label: "Botón de WhatsApp" },
+    { icon: Search, label: "SEO básico" },
+  ];
+  return (
+    <section id="incluye" className="py-20 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <Reveal><Eyebrow>Qué puede incluir</Eyebrow></Reveal>
+          <Reveal delay={0.05}>
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[50px]">
+              Todo lo que tu cliente necesita, en un solo lugar.
+            </h2>
+          </Reveal>
+        </div>
+
+        <div className="mt-12 grid gap-px overflow-hidden rounded-3xl border hairline bg-hairline sm:grid-cols-2 lg:grid-cols-5">
           {items.map((it, i) => {
             const Icon = it.icon;
             return (
-              <Reveal key={it.title} delay={(i % 3) * 0.06}>
-                <div className="h-full bg-background p-7 transition-colors hover:bg-surface/60">
-                  <span className="inline-flex h-10 w-10 items-center justify-center rounded-xl bg-surface text-foreground">
-                    <Icon className="h-5 w-5" />
+              <Reveal key={it.label} delay={(i % 5) * 0.05}>
+                <div className="flex h-full items-center gap-3 bg-background p-5 transition-colors hover:bg-surface/60">
+                  <span className="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl bg-surface text-brand">
+                    <Icon className="h-4.5 w-4.5" />
                   </span>
-                  <h3 className="mt-5 font-display text-[20px] tracking-tight">{it.title}</h3>
-                  <p className="mt-2 text-[14.5px] leading-relaxed text-ink-soft">{it.desc}</p>
+                  <span className="text-[14px] font-medium">{it.label}</span>
                 </div>
               </Reveal>
             );
           })}
         </div>
+
+        <Reveal delay={0.1}>
+          <p className="mt-6 text-[14px] text-ink-soft">
+            Seleccionamos y organizamos las secciones que realmente necesita cada negocio.
+          </p>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ───────────────────────────── 04 selector interactivo ───────────────────────────── */
+/* ───────────────────────────── 04 selector ───────────────────────────── */
 
 const NEGOCIOS = [
   {
     id: "hospedaje",
     label: "Hospedaje",
     icon: Home,
-    img: exCabanas,
-    items: ["Habitaciones", "Galería", "Tarifas", "Cómo llegar", "Opiniones", "Reservar por WhatsApp"],
-  },
-  {
-    id: "consultorio",
-    label: "Consultorio",
-    icon: Stethoscope,
-    img: exPsicologa,
-    items: ["Perfil profesional", "Servicios", "Horarios", "FAQ", "Ubicación", "Agendar"],
+    items: ["Habitaciones", "Galería", "Tarifas", "Ubicación", "Opiniones", "Reservar por WhatsApp"],
+    cta: "Reservar por WhatsApp",
   },
   {
     id: "restaurante",
     label: "Restaurante",
     icon: UtensilsCrossed,
-    img: exRestaurante,
-    items: ["Menú", "Galería", "Horarios", "Maps", "Opiniones", "Reservaciones"],
+    items: ["Menú", "Galería", "Horarios", "Mapa", "Opiniones", "Reservaciones"],
+    cta: "Reservar una mesa",
+  },
+  {
+    id: "consultorio",
+    label: "Consultorio",
+    icon: Stethoscope,
+    items: ["Perfil profesional", "Servicios", "Horarios", "Preguntas frecuentes", "Ubicación", "Agendar por WhatsApp"],
+    cta: "Agendar una cita",
   },
   {
     id: "tienda",
     label: "Tienda",
     icon: Store,
-    img: exTienda,
-    items: ["Catálogo", "Categorías", "Precios", "Formas de pago", "Envíos", "Pedidos por WhatsApp"],
+    items: ["Catálogo", "Categorías", "Precios", "Formas de pago", "Ubicación", "Pedidos por WhatsApp"],
+    cta: "Hacer un pedido",
   },
   {
     id: "servicios",
     label: "Servicios profesionales",
     icon: Briefcase,
-    img: projAeme,
-    items: ["Servicios", "Sectores", "Proceso", "Recursos", "Contacto", "Agendar"],
+    items: ["Presentación", "Servicios", "Experiencia", "Testimonios", "Preguntas frecuentes", "Solicitar información"],
+    cta: "Solicitar información",
   },
   {
     id: "otro",
     label: "Otro",
     icon: MoreHorizontal,
-    img: projVioleta,
-    items: ["Nos cuentas tu negocio", "Diseñamos la estructura ideal", "Contenido y fotografías", "Contacto claro", "Botón de WhatsApp", "Publicación"],
+    items: ["Nos cuentas de tu negocio", "Definimos las secciones", "Organizamos la información", "Fotografías y textos", "Botón de WhatsApp", "Publicación"],
+    cta: "Contar mi caso",
   },
 ];
 
@@ -605,23 +932,23 @@ function SelectorNegocio() {
   const [active, setActive] = useState(NEGOCIOS[0].id);
   const current = NEGOCIOS.find((n) => n.id === active)!;
   return (
-    <section className="bg-surface py-24 sm:py-28">
+    <section className="bg-surface py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <Reveal><Eyebrow>Interactivo</Eyebrow></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[50px]">
               ¿Qué tipo de negocio tienes?
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
             <p className="mt-4 text-[15.5px] text-ink-soft">
-              Elige uno para ver cómo podría estructurarse tu página.
+              Elige una opción para ver cómo podría organizarse tu página.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-10 flex flex-wrap gap-2">
+        <div className="mt-9 flex flex-wrap gap-2">
           {NEGOCIOS.map((n) => {
             const Icon = n.icon;
             const on = n.id === active;
@@ -642,36 +969,65 @@ function SelectorNegocio() {
           })}
         </div>
 
-        <div className="mt-10 grid gap-8 lg:grid-cols-[1.15fr_1fr] lg:items-stretch">
+        <div className="mt-9 grid gap-7 lg:grid-cols-[1.05fr_1fr]">
           <div className="rounded-[28px] border hairline bg-background p-3 shadow-[0_30px_80px_-40px_rgba(30,30,30,0.25)]">
-            <div className="relative overflow-hidden rounded-[20px] bg-surface aspect-[5/4]">
+            <div className="overflow-hidden rounded-[20px] border hairline">
+              <div className="flex items-center gap-1.5 border-b hairline bg-surface/60 px-4 py-3">
+                <span className="h-2.5 w-2.5 rounded-full bg-brand/40" />
+                <span className="h-2.5 w-2.5 rounded-full bg-brand/40" />
+                <span className="h-2.5 w-2.5 rounded-full bg-brand/40" />
+                <span className="ml-3 text-[11px] text-ink-soft">tunegocio.com</span>
+              </div>
               <AnimatePresence mode="wait">
-                <motion.img
+                <motion.div
                   key={current.id}
-                  src={current.img}
-                  alt={`Página tipo para ${current.label}`}
-                  initial={{ opacity: 0, scale: 1.02 }}
-                  animate={{ opacity: 1, scale: 1 }}
+                  initial={{ opacity: 0, y: 8 }}
+                  animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0 }}
-                  transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-                  className="absolute inset-0 h-full w-full object-cover"
-                />
+                  transition={{ duration: 0.32 }}
+                  className="space-y-3 bg-background p-5 sm:p-6"
+                >
+                  <div className="font-display text-[20px] leading-tight tracking-tight sm:text-[24px]">
+                    {current.label}
+                  </div>
+                  <div className="h-24 rounded-2xl bg-surface" />
+                  <div className="grid grid-cols-3 gap-2">
+                    {current.items.slice(0, 3).map((it) => (
+                      <div key={it} className="rounded-xl border hairline p-3">
+                        <div className="text-[11px] font-semibold text-foreground">{it}</div>
+                        <div className="mt-2 h-1.5 w-10/12 rounded-full bg-brand/20" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="space-y-2">
+                    {current.items.slice(3).map((it) => (
+                      <div key={it} className="flex items-center justify-between rounded-xl border hairline px-3.5 py-2.5">
+                        <span className="text-[12.5px] text-foreground">{it}</span>
+                        <span className="h-1.5 w-14 rounded-full bg-brand/20" />
+                      </div>
+                    ))}
+                  </div>
+                  <div className="inline-flex items-center gap-2 rounded-full bg-trust px-4 py-2 text-[12px] font-semibold text-trust-foreground">
+                    <MessageCircle className="h-3.5 w-3.5" /> {current.cta}
+                  </div>
+                </motion.div>
               </AnimatePresence>
             </div>
           </div>
-          <div className="flex flex-col justify-center rounded-[28px] border hairline bg-background p-8">
-            <Eyebrow>Estructura sugerida</Eyebrow>
-            <h3 className="mt-3 font-display text-[26px] tracking-tight">{current.label}</h3>
+
+          <div className="flex flex-col justify-center rounded-[28px] border hairline bg-background p-7 sm:p-8">
+            <Eyebrow>Módulos recomendados</Eyebrow>
+            <h3 className="mt-3 font-display text-[24px] tracking-tight">{current.label}</h3>
             <ul className="mt-6 space-y-3">
               <AnimatePresence mode="popLayout">
                 {current.items.map((it, i) => (
                   <motion.li
                     key={`${current.id}-${it}`}
-                    initial={{ opacity: 0, x: -10 }}
+                    initial={{ opacity: 0, x: -8 }}
                     animate={{ opacity: 1, x: 0 }}
                     exit={{ opacity: 0 }}
-                    transition={{ delay: i * 0.04, duration: 0.3 }}
-                    className="flex items-center gap-3 text-[15px] text-foreground"
+                    transition={{ delay: i * 0.04, duration: 0.28 }}
+                    className="flex items-center gap-3 text-[15px]"
                   >
                     <span className="inline-flex h-6 w-6 items-center justify-center rounded-full bg-brand/12 text-brand">
                       <Check className="h-3.5 w-3.5" strokeWidth={3} />
@@ -681,215 +1037,55 @@ function SelectorNegocio() {
                 ))}
               </AnimatePresence>
             </ul>
-            <p className="mt-8 text-[13px] italic text-ink-soft">
-              Así podría verse tu negocio en internet.
-            </p>
-          </div>
-        </div>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── 05 antes / después ───────────────────────────── */
-
-function AntesDespues() {
-  const [pos, setPos] = useState(52);
-  const ref = useRef<HTMLDivElement>(null);
-  const dragging = useRef(false);
-
-  const onMove = (clientX: number) => {
-    const el = ref.current;
-    if (!el) return;
-    const rect = el.getBoundingClientRect();
-    const p = ((clientX - rect.left) / rect.width) * 100;
-    setPos(Math.max(6, Math.min(94, p)));
-  };
-
-  useEffect(() => {
-    const up = () => (dragging.current = false);
-    const move = (e: MouseEvent) => dragging.current && onMove(e.clientX);
-    const tmove = (e: TouchEvent) => dragging.current && onMove(e.touches[0].clientX);
-    window.addEventListener("mouseup", up);
-    window.addEventListener("mousemove", move);
-    window.addEventListener("touchend", up);
-    window.addEventListener("touchmove", tmove);
-    return () => {
-      window.removeEventListener("mouseup", up);
-      window.removeEventListener("mousemove", move);
-      window.removeEventListener("touchend", up);
-      window.removeEventListener("touchmove", tmove);
-    };
-  }, []);
-
-  return (
-    <section className="py-24 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <Reveal><Eyebrow>Antes · Después</Eyebrow></Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-              De estar en redes a tener una presencia profesional.
-            </h2>
-          </Reveal>
-          <Reveal delay={0.1}>
-            <p className="mt-4 text-[15.5px] text-ink-soft">
-              Arrastra el control para comparar.
-            </p>
-          </Reveal>
-        </div>
-
-        <Reveal delay={0.1}>
-          <div
-            ref={ref}
-            className="relative mt-10 aspect-[16/10] w-full overflow-hidden rounded-[28px] border hairline bg-surface select-none"
-          >
-            {/* AFTER (right) */}
-            <div className="absolute inset-0">
-              <VitrinaMock />
-            </div>
-            {/* BEFORE (left, clipped) */}
-            <div className="absolute inset-0 overflow-hidden" style={{ width: `${pos}%` }}>
-              <SoloRedesMock />
-            </div>
-
-            {/* labels */}
-            <div className="pointer-events-none absolute left-4 top-4 rounded-full bg-foreground/85 backdrop-blur px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-background">
-              Solo redes
-            </div>
-            <div className="pointer-events-none absolute right-4 top-4 rounded-full bg-brand px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-brand-foreground">
-              Tu Vitrina Digital
-            </div>
-
-            {/* handle */}
-            <div
-              className="absolute top-0 bottom-0 w-px bg-background"
-              style={{ left: `${pos}%` }}
+            <a
+              href={WA.portafolio}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-8 inline-flex items-center justify-center gap-2 rounded-full bg-brand px-5 py-3 text-[13px] font-semibold text-brand-foreground transition-transform hover:-translate-y-0.5"
             >
-              <button
-                onMouseDown={() => (dragging.current = true)}
-                onTouchStart={() => (dragging.current = true)}
-                aria-label="Comparar antes y después"
-                className="absolute top-1/2 -translate-x-1/2 -translate-y-1/2 grid h-11 w-11 place-items-center rounded-full bg-background border-2 border-brand shadow-[0_8px_24px_-8px_rgba(30,30,30,0.35)] cursor-ew-resize"
-              >
-                <GripVertical className="h-5 w-5 text-brand" />
-              </button>
-            </div>
+              <MessageCircle className="h-4 w-4" /> {current.cta}
+            </a>
           </div>
-        </Reveal>
-
-        <Reveal delay={0.15}>
-          <p className="mt-8 text-center font-display text-[22px] leading-snug tracking-tight sm:text-[28px]">
-            No reemplazamos tus redes.{" "}
-            <span className="text-ink-soft">Las convertimos en una presencia digital más completa.</span>
-          </p>
-        </Reveal>
+        </div>
       </div>
     </section>
   );
 }
 
-function SoloRedesMock() {
-  const chips = ["Horarios", "Servicios", "Ubicación", "Fotos", "Precios", "Contacto"];
-  return (
-    <div className="h-full w-full bg-[#EFE7DA] p-6 sm:p-10">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-ink-soft">Feed disperso</div>
-      <div className="mt-4 grid grid-cols-3 gap-3 sm:gap-4">
-        {chips.map((c, i) => (
-          <div
-            key={c}
-            className="aspect-square rounded-2xl bg-background border hairline p-3 flex flex-col justify-between"
-            style={{ transform: `rotate(${(i % 3) - 1}deg)` }}
-          >
-            <div className="text-[10px] uppercase tracking-[0.14em] text-ink-soft">Post {i + 1}</div>
-            <div className="font-display text-[13px] sm:text-[15px] leading-tight text-foreground">{c}</div>
-          </div>
-        ))}
-      </div>
-      <p className="mt-6 text-[12.5px] italic text-ink-soft max-w-xs">
-        La información importante queda enterrada entre publicaciones.
-      </p>
-    </div>
-  );
-}
-
-function VitrinaMock() {
-  const rows = [
-    { label: "Servicios", w: "w-11/12" },
-    { label: "Galería", w: "w-10/12" },
-    { label: "Horarios", w: "w-9/12" },
-    { label: "Ubicación", w: "w-11/12" },
-    { label: "Opiniones", w: "w-8/12" },
-  ];
-  return (
-    <div className="h-full w-full bg-background p-6 sm:p-10">
-      <div className="flex items-center justify-between">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-brand">Tu Vitrina Digital</div>
-        <div className="text-[10.5px] text-ink-soft">mivitrina.mx</div>
-      </div>
-      <div className="mt-5 font-display text-[20px] sm:text-[26px] leading-tight tracking-tight text-foreground">
-        Un solo enlace con toda tu información.
-      </div>
-      <div className="mt-6 space-y-3">
-        {rows.map((r) => (
-          <div key={r.label} className="rounded-2xl border hairline p-3.5">
-            <div className="flex items-center justify-between">
-              <span className="text-[12.5px] font-semibold text-foreground">{r.label}</span>
-              <span className="text-[10.5px] text-ink-soft">Sección</span>
-            </div>
-            <div className={`mt-2 h-1.5 rounded-full bg-brand/20 ${r.w}`} />
-          </div>
-        ))}
-      </div>
-      <div className="mt-5 inline-flex items-center gap-2 rounded-full bg-trust px-4 py-2 text-[12px] font-semibold text-trust-foreground">
-        <MessageCircle className="h-3.5 w-3.5" /> Contactar por WhatsApp
-      </div>
-    </div>
-  );
-}
-
-/* ───────────────────────────── 06 redes → web → whatsapp ───────────────────────────── */
+/* ───────────────────────────── 05 redes → web → whatsapp ───────────────────────────── */
 
 function FlujoRedesWebWhatsapp() {
   const steps = [
-    { icon: Instagram, label: "Instagram · Facebook", verb: "atraen", tint: "bg-[#EFE7DA]" },
-    { icon: Monitor, label: "Página web", verb: "convence", tint: "bg-background" },
-    { icon: MessageCircle, label: "WhatsApp", verb: "convierte", tint: "bg-trust text-trust-foreground" },
+    { icon: Instagram, label: "Instagram y Facebook", text: "Te descubren.", dark: false },
+    { icon: Monitor, label: "Página web", text: "Conocen y entienden tu negocio.", dark: false },
+    { icon: MessageCircle, label: "WhatsApp", text: "Te escriben.", dark: true },
   ];
   return (
-    <section className="bg-surface py-24 sm:py-28">
+    <section className="py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="max-w-2xl">
-          <Reveal><Eyebrow>El flujo</Eyebrow></Reveal>
-          <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-              Redes, web y WhatsApp funcionan juntos.
-            </h2>
-          </Reveal>
-        </div>
-
-        <div className="mt-14 grid gap-6 md:grid-cols-3 md:items-stretch">
+        <div className="grid gap-6 md:grid-cols-3">
           {steps.map((s, i) => {
             const Icon = s.icon;
-            const dark = s.tint.includes("trust");
             return (
-              <Reveal key={s.label} delay={i * 0.15}>
+              <Reveal key={s.label} delay={i * 0.12}>
                 <div
-                  className={`relative flex h-full flex-col items-start rounded-3xl border hairline p-7 ${s.tint} ${dark ? "border-transparent" : ""}`}
+                  className={`flex h-full flex-col items-start rounded-3xl border p-7 ${
+                    s.dark ? "border-transparent bg-trust text-trust-foreground" : "hairline bg-surface"
+                  }`}
                 >
-                  <span className={`eyebrow ${dark ? "!text-trust-foreground/70" : ""}`}>Paso {i + 1}</span>
+                  <span className={`eyebrow ${s.dark ? "!text-trust-foreground/70" : ""}`}>Paso {i + 1}</span>
                   <span
                     className={`mt-4 inline-flex h-14 w-14 items-center justify-center rounded-2xl ${
-                      dark ? "bg-trust-foreground/15 text-trust-foreground" : "bg-brand/12 text-brand"
+                      s.dark ? "bg-trust-foreground/15 text-trust-foreground" : "bg-brand/12 text-brand"
                     }`}
                   >
                     <Icon className="h-6 w-6" />
                   </span>
-                  <h3 className={`mt-5 font-display text-[22px] tracking-tight ${dark ? "text-trust-foreground" : ""}`}>
+                  <h3 className={`mt-5 font-display text-[21px] tracking-tight ${s.dark ? "text-trust-foreground" : ""}`}>
                     {s.label}
                   </h3>
-                  <p className={`mt-2 text-[14.5px] ${dark ? "text-trust-foreground/85" : "text-ink-soft"}`}>
-                    {s.verb}
+                  <p className={`mt-2 text-[14.5px] ${s.dark ? "text-trust-foreground/85" : "text-ink-soft"}`}>
+                    {s.text}
                   </p>
                 </div>
               </Reveal>
@@ -898,7 +1094,7 @@ function FlujoRedesWebWhatsapp() {
         </div>
 
         <Reveal delay={0.2}>
-          <p className="mt-12 text-center font-display text-[26px] leading-tight tracking-tight sm:text-[38px]">
+          <p className="mt-12 text-center font-display text-[24px] leading-tight tracking-tight sm:text-[36px]">
             Las redes atraen.{" "}
             <span className="text-brand">Tu página web convence.</span>{" "}
             <span className="text-trust">WhatsApp convierte.</span>
@@ -909,430 +1105,7 @@ function FlujoRedesWebWhatsapp() {
   );
 }
 
-/* ───────────────────────────── 07 proyectos reales ───────────────────────────── */
-
-type Proyecto = {
-  slug: string;
-  name: string;
-  category: string;
-  img: string;
-  gallery?: string[];
-  url: string;
-  description: string;
-  chips: string[];
-  cta: string;
-  badge?: string;
-  variant?: "tool";
-};
-
-const PROYECTOS: Proyecto[] = [
-  {
-    slug: "florida",
-    name: "La Florida Paraíso Ecoturístico",
-    category: "Ecoturismo · Hospedaje",
-    img: projFlorida,
-    gallery: [projFlorida, projFloridaFicha],
-    url: "https://lafloridaparaisoecoturistico.com",
-    description:
-      "Sitio web para un proyecto ecoturístico ubicado en la región de Lagos de Montebello, con información sobre hospedaje, naturaleza, experiencias y formas de contacto.",
-    chips: ["Cabañas", "Tarifas", "Galería", "Cómo llegar", "FAQ", "Reservas por WhatsApp"],
-    cta: "Ver página",
-  },
-  {
-    slug: "violeta",
-    name: "Terapia con Violeta",
-    category: "Psicología · Servicios profesionales",
-    img: projVioleta,
-    url: "https://terapiaconvioleta.com",
-    description:
-      "Página profesional de servicios de terapia, diseñada para presentar el enfoque de atención, generar confianza y facilitar el contacto con pacientes.",
-    chips: ["Perfil profesional", "Psicoterapia", "Evaluaciones", "Talleres", "Recursos", "Agenda"],
-    cta: "Ver página",
-  },
-  {
-    slug: "aeme",
-    name: "AEME — Alianza Empresarial",
-    category: "Asesoría empresarial · Sitio corporativo",
-    img: projAeme,
-    url: "https://preview--aeme-alianza-empresarial.lovable.app/",
-    description:
-      "Página institucional para una alianza empresarial, con presentación de servicios, objetivos, información organizacional y medios de contacto.",
-    chips: ["Servicios", "Proceso", "Sectores", "Recursos", "Trayectoria", "WhatsApp"],
-    cta: "Ver página",
-  },
-  {
-    slug: "fiesta",
-    name: "Tu Fiesta Fácil",
-    category: "Aplicación web · Herramienta para negocio",
-    img: projFiesta,
-    url: "https://preview--tu-fiesta-facil.lovable.app/",
-    description:
-      "Página comercial para presentar servicios y soluciones para fiestas, con información organizada, imágenes y botones de contacto.",
-    chips: ["Inventario", "Presupuestos", "Pedidos", "Clientes", "Estadísticas"],
-    cta: "Ver página",
-    badge: "Aplicación web",
-    variant: "tool",
-  },
-  {
-    slug: "qi",
-    name: "Qi Flow Hands",
-    category: "Bienestar · Terapias corporales",
-    img: projQi,
-    url: "https://qi-flow-hands.lovable.app",
-    description:
-      "Sitio de bienestar y terapias corporales con una identidad visual cálida, información sobre servicios y acceso directo a medios de contacto.",
-    chips: ["Terapias", "Horarios", "Ubicación", "WhatsApp"],
-    cta: "Ver página",
-  },
-];
-
-function Proyectos() {
-  const [preview, setPreview] = useState<Proyecto | null>(null);
-  return (
-    <section id="proyectos" className="py-24 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-end">
-          <div>
-            <Reveal><Eyebrow>Portafolio</Eyebrow></Reveal>
-            <Reveal delay={0.05}>
-              <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-                Páginas reales que ya hemos creado.
-              </h2>
-            </Reveal>
-          </div>
-          <Reveal delay={0.1}>
-            <p className="text-[16px] leading-relaxed text-ink-soft lg:max-w-md">
-              Cada negocio tiene necesidades distintas. Diseñamos la estructura,
-              la información y la experiencia según lo que realmente necesita.
-            </p>
-          </Reveal>
-        </div>
-
-        <div className="mt-14 grid gap-8 lg:grid-cols-2">
-          {PROYECTOS.map((p, i) => (
-            <Reveal key={p.slug} delay={(i % 2) * 0.08}>
-              <ProyectoCard p={p} onPreview={() => setPreview(p)} />
-            </Reveal>
-          ))}
-        </div>
-      </div>
-
-      <AnimatePresence>
-        {preview && <PreviewModal p={preview} onClose={() => setPreview(null)} />}
-      </AnimatePresence>
-    </section>
-  );
-}
-
-function ProyectoCard({ p, onPreview }: { p: Proyecto; onPreview: () => void }) {
-  const [hover, setHover] = useState(false);
-  return (
-    <motion.div
-      whileHover={{ y: -4 }}
-      transition={spring}
-      className="group overflow-hidden rounded-3xl border hairline bg-background"
-      onMouseEnter={() => setHover(true)}
-      onMouseLeave={() => setHover(false)}
-    >
-      <div className="relative overflow-hidden bg-surface aspect-[16/10]">
-        <motion.img
-          src={p.img}
-          alt={`Captura del proyecto ${p.name}`}
-          loading="lazy"
-          width={1280}
-          height={960}
-          animate={{ y: hover ? "-18%" : "0%" }}
-          transition={{ duration: 4, ease: "easeInOut" }}
-          className="absolute inset-0 h-[130%] w-full object-cover object-top"
-        />
-        {p.badge && (
-          <span className="absolute left-4 top-4 rounded-full bg-trust px-3 py-1 text-[10.5px] font-semibold uppercase tracking-[0.16em] text-trust-foreground">
-            {p.badge}
-          </span>
-        )}
-        <button
-          onClick={onPreview}
-          className="absolute right-4 bottom-4 inline-flex items-center gap-2 rounded-full bg-background/90 backdrop-blur px-3.5 py-2 text-[11.5px] font-semibold uppercase tracking-[0.14em] text-foreground border hairline hover:bg-brand hover:text-brand-foreground hover:border-brand transition-colors"
-        >
-          Vista previa <Monitor className="h-3.5 w-3.5" />
-        </button>
-      </div>
-      <div className="p-7">
-        <Eyebrow>{p.category}</Eyebrow>
-        <h3 className="mt-2 font-display text-[24px] tracking-tight">{p.name}</h3>
-        <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
-        <div className="mt-4 flex flex-wrap gap-1.5">
-          {p.chips.map((c) => (
-            <span
-              key={c}
-              className="rounded-full border hairline bg-surface/60 px-2.5 py-1 text-[11.5px] text-ink-soft"
-            >
-              {c}
-            </span>
-          ))}
-        </div>
-        <div className="mt-6 flex flex-wrap items-center gap-4">
-          <a
-            href={p.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-brand hover:text-foreground transition-colors"
-          >
-            Ver página <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-          <button
-            onClick={onPreview}
-            className="sm:hidden inline-flex items-center gap-1.5 text-[12.5px] font-semibold uppercase tracking-[0.14em] text-ink-soft"
-          >
-            Vista previa
-          </button>
-        </div>
-      </div>
-    </motion.div>
-  );
-}
-
-function PreviewModal({ p, onClose }: { p: Proyecto; onClose: () => void }) {
-  const [device, setDevice] = useState<"desktop" | "mobile">("desktop");
-  useEffect(() => {
-    const onKey = (e: KeyboardEvent) => e.key === "Escape" && onClose();
-    window.addEventListener("keydown", onKey);
-    document.body.style.overflow = "hidden";
-    return () => {
-      window.removeEventListener("keydown", onKey);
-      document.body.style.overflow = "";
-    };
-  }, [onClose]);
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      className="fixed inset-0 z-[60] flex items-center justify-center bg-ink/60 backdrop-blur-sm p-4"
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ opacity: 0, y: 20, scale: 0.98 }}
-        animate={{ opacity: 1, y: 0, scale: 1 }}
-        exit={{ opacity: 0, y: 10 }}
-        transition={spring}
-        onClick={(e) => e.stopPropagation()}
-        className="relative w-full max-w-4xl rounded-3xl border hairline bg-background p-4 sm:p-6 shadow-[0_40px_100px_-30px_rgba(30,30,30,0.5)]"
-      >
-        <div className="flex flex-wrap items-center justify-between gap-3">
-          <div>
-            <Eyebrow>{p.category}</Eyebrow>
-            <h3 className="mt-1 font-display text-[22px] tracking-tight">{p.name}</h3>
-          </div>
-          <div className="flex items-center gap-2">
-            <div className="inline-flex rounded-full border hairline p-1 bg-surface/60">
-              {(["desktop", "mobile"] as const).map((d) => (
-                <button
-                  key={d}
-                  onClick={() => setDevice(d)}
-                  className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11.5px] font-semibold uppercase tracking-[0.14em] transition-colors ${
-                    device === d ? "bg-background text-foreground shadow-sm" : "text-ink-soft"
-                  }`}
-                >
-                  {d === "desktop" ? <Monitor className="h-3.5 w-3.5" /> : <Smartphone className="h-3.5 w-3.5" />}
-                  {d === "desktop" ? "Escritorio" : "Móvil"}
-                </button>
-              ))}
-            </div>
-            <button
-              onClick={onClose}
-              aria-label="Cerrar"
-              className="inline-flex h-9 w-9 items-center justify-center rounded-full border hairline hover:bg-surface"
-            >
-              <X className="h-4 w-4" />
-            </button>
-          </div>
-        </div>
-
-        <div className="mt-5 rounded-2xl bg-surface p-4 sm:p-6 flex justify-center">
-          <div
-            className={`overflow-hidden rounded-xl border hairline bg-background ${
-              device === "desktop" ? "w-full aspect-[16/10]" : "w-[240px] aspect-[9/19]"
-            }`}
-          >
-            <img
-              src={p.img}
-              alt={p.name}
-              className="h-full w-full object-cover object-top"
-            />
-          </div>
-        </div>
-
-        {p.gallery && p.gallery.length > 1 && (
-          <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-4">
-            {p.gallery.map((g, i) => (
-              <div key={i} className="overflow-hidden rounded-xl border hairline bg-background aspect-[16/10]">
-                <img src={g} alt={`${p.name} — vista ${i + 1}`} className="h-full w-full object-cover object-top" />
-              </div>
-            ))}
-          </div>
-        )}
-
-        <p className="mt-5 text-[14px] leading-relaxed text-ink-soft">{p.description}</p>
-
-        <div className="mt-5 flex flex-wrap items-center justify-between gap-3">
-          <p className="text-[13px] text-ink-soft">
-            Proyecto: <span className="text-foreground font-medium">{p.name}</span>
-          </p>
-          <a
-            href={p.url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 rounded-full bg-brand px-4 py-2 text-[12px] font-semibold uppercase tracking-[0.14em] text-brand-foreground hover:bg-foreground transition-colors"
-          >
-            Ver página <ExternalLink className="h-3.5 w-3.5" />
-          </a>
-        </div>
-      </motion.div>
-    </motion.div>
-  );
-}
-
-/* ───────────────────────────── 08 franja herramienta ───────────────────────────── */
-
-const HERRAMIENTA_TABS = [
-  { id: "Inventario", icon: Package },
-  { id: "Presupuestos", icon: FileText },
-  { id: "Pedidos", icon: ShoppingCart },
-  { id: "Clientes", icon: Users },
-  { id: "Estadísticas", icon: BarChart3 },
-];
-
-function FranjaHerramienta() {
-  const [tab, setTab] = useState(0);
-  useEffect(() => {
-    const t = setInterval(() => setTab((i) => (i + 1) % HERRAMIENTA_TABS.length), 2600);
-    return () => clearInterval(t);
-  }, []);
-  return (
-    <section className="bg-trust text-trust-foreground py-24 sm:py-28">
-      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1.1fr] lg:items-center">
-          <div>
-            <span className="eyebrow !text-trust-foreground/70">
-              No todo tiene que ser una página informativa
-            </span>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-              También podemos construir <span className="text-brand">herramientas</span> para tu negocio.
-            </h2>
-            <p className="mt-6 max-w-lg text-[15.5px] leading-relaxed text-trust-foreground/80">
-              Algunos negocios necesitan algo más. Podemos revisar contigo si tu
-              proyecto requiere funciones especiales y decirte si podemos
-              implementarlas antes de cotizar.
-            </p>
-            <div className="mt-6 flex flex-wrap gap-2">
-              {HERRAMIENTA_TABS.map((t, i) => {
-                const Icon = t.icon;
-                const on = i === tab;
-                return (
-                  <button
-                    key={t.id}
-                    onClick={() => setTab(i)}
-                    className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-[12px] font-semibold transition-colors ${
-                      on
-                        ? "border-brand bg-brand text-brand-foreground"
-                        : "border-trust-foreground/25 text-trust-foreground/80 hover:text-trust-foreground"
-                    }`}
-                  >
-                    <Icon className="h-3.5 w-3.5" />
-                    {t.id}
-                  </button>
-                );
-              })}
-            </div>
-          </div>
-
-          <div className="rounded-[28px] border border-trust-foreground/15 bg-[#3a2c25] p-3 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.6)]">
-            <div className="rounded-[20px] bg-background overflow-hidden">
-              <div className="flex items-center gap-1.5 border-b hairline px-4 py-3">
-                <span className="h-2.5 w-2.5 rounded-full bg-[#E76F51]/70" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#E9C46A]/70" />
-                <span className="h-2.5 w-2.5 rounded-full bg-[#7C8962]/70" />
-                <span className="ml-4 text-[11px] text-ink-soft">Tu Fiesta Fácil · panel</span>
-              </div>
-              <div className="grid grid-cols-[130px_1fr] min-h-[340px]">
-                <div className="border-r hairline p-3 space-y-1">
-                  {HERRAMIENTA_TABS.map((t, i) => {
-                    const Icon = t.icon;
-                    const on = i === tab;
-                    return (
-                      <button
-                        key={t.id}
-                        onClick={() => setTab(i)}
-                        className={`w-full flex items-center gap-2 rounded-lg px-2.5 py-2 text-left text-[12px] transition-colors ${
-                          on ? "bg-brand/12 text-brand font-semibold" : "text-ink-soft hover:bg-surface"
-                        }`}
-                      >
-                        <Icon className="h-3.5 w-3.5" />
-                        {t.id}
-                      </button>
-                    );
-                  })}
-                </div>
-                <div className="p-5">
-                  <AnimatePresence mode="wait">
-                    <motion.div
-                      key={tab}
-                      initial={{ opacity: 0, y: 8 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -6 }}
-                      transition={{ duration: 0.35 }}
-                    >
-                      <div className="flex items-center justify-between">
-                        <h4 className="font-display text-[17px] tracking-tight text-foreground">
-                          {HERRAMIENTA_TABS[tab].id}
-                        </h4>
-                        <span className="text-[10.5px] text-ink-soft uppercase tracking-[0.14em]">
-                          Panel demo
-                        </span>
-                      </div>
-                      <div className="mt-4 grid grid-cols-3 gap-2">
-                        {[0, 1, 2].map((k) => (
-                          <div key={k} className="rounded-xl border hairline p-3">
-                            <div className="text-[10px] uppercase tracking-[0.14em] text-ink-soft">
-                              Métrica {k + 1}
-                            </div>
-                            <div className="mt-2 font-display text-[18px] text-foreground">
-                              {["45", "128", "12"][k]}
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                      <div className="mt-4 space-y-2">
-                        {[0, 1, 2, 3].map((r) => (
-                          <div key={r} className="flex items-center justify-between rounded-lg border hairline px-3 py-2">
-                            <div className="flex items-center gap-2">
-                              <div className="h-6 w-6 rounded-md bg-brand/12" />
-                              <div className="h-2 w-24 rounded bg-surface" />
-                            </div>
-                            <div className="h-2 w-14 rounded bg-brand/25" />
-                          </div>
-                        ))}
-                      </div>
-                    </motion.div>
-                  </AnimatePresence>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <p className="mt-10 max-w-3xl text-[13.5px] text-trust-foreground/70">
-          Nota: las herramientas, integraciones o funciones especiales no están
-          incluidas en Vitrina Inicial ni Vitrina Pro. Se revisan y cotizan por
-          separado antes de comenzar.
-        </p>
-      </div>
-    </section>
-  );
-}
-
-/* ───────────────────────────── 09 paquetes ───────────────────────────── */
+/* ───────────────────────────── 06 precios ───────────────────────────── */
 
 type Paquete = {
   name: string;
@@ -1341,6 +1114,7 @@ type Paquete = {
   intro: string;
   features: string[];
   cta: string;
+  href: string;
   featured?: boolean;
 };
 
@@ -1349,111 +1123,144 @@ const PAQUETES: Paquete[] = [
     name: "Vitrina Inicial",
     tag: "Para comenzar",
     price: "$1,000 MXN",
-    intro:
-      "Una página profesional para darle a tu negocio un espacio propio en internet.",
+    intro: "Todo lo necesario para comenzar a verte profesional en internet.",
     features: [
       "Llamada inicial para conocer el negocio",
-      "Diseño profesional adaptable a celular",
-      "Información principal del negocio",
-      "Servicios",
-      "Fotografías o galería",
-      "Ubicación",
-      "Formas de contacto",
+      "Página informativa de una sola vista larga",
+      "Diseño adaptable a computadora, tablet y celular",
+      "Organización de la información",
+      "Integración de fotografías, logotipo y datos proporcionados por el cliente",
+      "Ayuda para ordenar, mejorar y redactar el contenido",
+      "Secciones acordadas según las necesidades del negocio",
       "Botón de WhatsApp",
+      "SEO básico",
+      "Dominio .com durante el primer año",
+      "Alojamiento durante el primer año",
       "Hasta 2 rondas de ajustes antes de publicar",
-      "Dominio .com incluido durante el primer año",
     ],
-    cta: "Quiero comenzar",
+    cta: "Elegir Vitrina Inicial",
+    href: WA.inicial,
   },
   {
     name: "Vitrina Pro",
     tag: "Más elegido",
     price: "$1,300 MXN",
-    intro:
-      "Para quienes quieren mayor flexibilidad para revisar y afinar su página antes de publicarla.",
+    intro: "Mayor flexibilidad para revisar y afinar tu página antes de publicarla.",
     features: [
       "Todo lo incluido en Vitrina Inicial",
       "Hasta 5 rondas de ajustes antes de publicar",
       "Más oportunidades para afinar textos, fotografías, orden de secciones y detalles visuales",
-      "Dominio .com incluido durante el primer año",
     ],
-    cta: "Quiero Vitrina Pro",
+    cta: "Elegir Vitrina Pro",
+    href: WA.pro,
     featured: true,
   },
 ];
 
-function Paquetes() {
+function Precios() {
   const simples = [
-    "Cambios de horarios",
-    "Fotografías",
-    "Teléfonos",
-    "Precios",
-    "Textos",
-    "Dirección",
-    "Información que ya existe dentro de la página",
+    "Cambiar horarios",
+    "Cambiar fotografías",
+    "Actualizar teléfono",
+    "Cambiar precios",
+    "Corregir o sustituir textos",
+    "Actualizar dirección",
+    "Modificar información existente",
   ];
   return (
-    <section id="paquetes" className="bg-surface py-24 sm:py-28">
+    <section id="precios" className="bg-surface py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="text-center max-w-2xl mx-auto">
-          <Reveal><Eyebrow>Paquetes</Eyebrow></Reveal>
+        <div className="mx-auto max-w-2xl text-center">
+          <Reveal><Eyebrow>Precios</Eyebrow></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[50px]">
               Dos formas de comenzar tu página.
             </h2>
           </Reveal>
           <Reveal delay={0.1}>
-            <p className="mt-5 text-[16px] text-ink-soft">
+            <p className="mt-5 text-[15.5px] text-ink-soft">
               La diferencia principal entre ambos paquetes es el número de rondas
-              de ajustes y el tiempo de atención dedicado al proyecto.
+              de ajustes y el tiempo de revisión dedicado al proyecto.
             </p>
           </Reveal>
         </div>
 
-        <div className="mt-14 grid gap-6 md:grid-cols-2 md:items-stretch max-w-4xl mx-auto">
+        <div className="mx-auto mt-12 grid max-w-4xl gap-6 md:grid-cols-2 md:items-stretch">
           {PAQUETES.map((p, i) => (
-            <Reveal key={p.name} delay={i * 0.08}>
+            <Reveal key={p.name} delay={i * 0.06}>
               <PaqueteCard p={p} />
             </Reveal>
           ))}
         </div>
 
-        <Reveal delay={0.15}>
-          <div className="mt-14 rounded-3xl border hairline bg-background p-8 sm:p-10 max-w-4xl mx-auto">
+        <Reveal delay={0.1}>
+          <p className="mx-auto mt-8 max-w-4xl rounded-2xl border hairline bg-background px-5 py-4 text-[13.5px] leading-relaxed text-ink-soft">
+            <span className="font-semibold text-foreground">¿Qué es una ronda de ajustes?</span>{" "}
+            Una ronda de ajustes es un conjunto de cambios reunidos y enviados en una sola ocasión.
+          </p>
+        </Reveal>
+
+        <Reveal delay={0.12}>
+          <div className="mx-auto mt-8 max-w-4xl rounded-3xl border hairline bg-background p-7 sm:p-9">
             <Eyebrow>Después de publicar tu página</Eyebrow>
-            <p className="mt-3 font-display text-[22px] leading-snug tracking-tight text-foreground sm:text-[26px]">
+            <p className="mt-3 font-display text-[21px] leading-snug tracking-tight sm:text-[25px]">
               Las actualizaciones sencillas tienen un costo{" "}
               <span className="text-brand">desde $200 MXN por solicitud.</span>
             </p>
-            <p className="mt-4 text-[14px] text-ink-soft">Consideramos actualizaciones sencillas:</p>
-            <div className="mt-4 flex flex-wrap gap-1.5">
+            <div className="mt-5 flex flex-wrap gap-1.5">
               {simples.map((s) => (
-                <span key={s} className="rounded-full border hairline bg-surface/60 px-3 py-1.5 text-[12.5px] text-foreground">
+                <span key={s} className="rounded-full border hairline bg-surface/60 px-3 py-1.5 text-[12.5px]">
                   {s}
                 </span>
               ))}
             </div>
-            <div className="mt-8 grid gap-4 border-t hairline pt-6 sm:grid-cols-2">
-              <p className="text-[13.5px] text-ink-soft leading-relaxed">
-                <span className="text-foreground font-semibold">Cambios mayores</span>,
-                nuevas secciones, nuevas páginas, funciones adicionales, rediseños
-                o integraciones especiales se revisan y cotizan antes de comenzar.
+            <div className="mt-7 grid gap-4 border-t hairline pt-6 text-[13.5px] leading-relaxed text-ink-soft sm:grid-cols-2">
+              <p>
+                Cambios mayores, nuevas páginas, nuevas secciones, rediseños,
+                herramientas, funciones adicionales o integraciones especiales se
+                revisan y cotizan antes de comenzar.
               </p>
-              <p className="text-[13.5px] text-ink-soft leading-relaxed">
-                Si necesitas una <span className="text-foreground font-semibold">función especial</span>,
-                primero revisamos si podemos implementarla y te indicamos alcance
-                y costo antes de comenzar.
-              </p>
-              <p className="text-[13.5px] text-ink-soft leading-relaxed sm:col-span-2">
-                <span className="text-foreground font-semibold">Dominio .com:</span>{" "}
-                el precio de ambos paquetes incluye el registro y la configuración
-                del dominio .com por un año. La renovación del dominio después del
-                primer año se cotiza por separado. El hosting y mantenimiento no
-                están incluidos.
+              <p>
+                Si necesitas una función especial, primero revisamos si podemos
+                implementarla y te explicamos el alcance y el costo.
               </p>
             </div>
+            <a
+              href={WA.actualizacion}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="mt-6 inline-flex items-center gap-2 rounded-full border hairline px-5 py-2.5 text-[12.5px] font-semibold hover:bg-surface transition-colors"
+            >
+              <MessageCircle className="h-4 w-4" /> Solicitar una actualización
+            </a>
           </div>
         </Reveal>
+
+        <div className="mx-auto mt-8 grid max-w-4xl gap-6 sm:grid-cols-2">
+          <Reveal delay={0.05}>
+            <div className="h-full rounded-3xl border hairline bg-background p-7">
+              <Eyebrow>Dominio, alojamiento y accesos</Eyebrow>
+              <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">
+                Tu página incluye dominio .com y alojamiento durante el primer año.
+                Te entregamos los accesos para que tengas control sobre tu proyecto.
+                Al terminar el año puedes renovar con nosotros o administrarlo por tu cuenta.
+              </p>
+            </div>
+          </Reveal>
+          <Reveal delay={0.1}>
+            <div className="h-full rounded-3xl border hairline bg-background p-7">
+              <Eyebrow>Pago</Eyebrow>
+              <p className="mt-3 font-display text-[20px] tracking-tight">
+                50% para iniciar y 50% antes de publicar.
+              </p>
+              <p className="mt-3 text-[14px] leading-relaxed text-ink-soft">
+                El anticipo inicial no es reembolsable, ya que se utiliza para
+                adquirir el dominio y el alojamiento y para comenzar el trabajo.
+                Los datos de pago se proporcionan por WhatsApp.
+              </p>
+            </div>
+          </Reveal>
+        </div>
       </div>
     </section>
   );
@@ -1465,7 +1272,7 @@ function PaqueteCard({ p }: { p: Paquete }) {
     <motion.div
       whileHover={{ y: -5 }}
       transition={spring}
-      className={`relative flex h-full flex-col rounded-3xl border bg-background p-7 sm:p-8 transition-shadow ${
+      className={`relative flex h-full flex-col rounded-3xl border bg-background p-7 transition-shadow sm:p-8 ${
         featured
           ? "border-brand shadow-[0_30px_60px_-30px_rgba(124,137,98,0.4)]"
           : "hairline hover:border-brand/40 hover:shadow-[0_20px_50px_-25px_rgba(30,30,30,0.18)]"
@@ -1476,16 +1283,14 @@ function PaqueteCard({ p }: { p: Paquete }) {
           Más elegido
         </span>
       )}
-      <div>
-        <Eyebrow>{p.tag}</Eyebrow>
-        <h3 className="mt-3 font-display text-[28px] tracking-tight">{p.name}</h3>
-        <p className="mt-3 font-display text-[32px] font-semibold text-foreground">{p.price}</p>
-        <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">{p.intro}</p>
-      </div>
+      <Eyebrow>{p.tag}</Eyebrow>
+      <h3 className="mt-3 font-display text-[26px] tracking-tight">{p.name}</h3>
+      <p className="mt-3 font-display text-[32px] font-semibold">{p.price}</p>
+      <p className="mt-3 text-[14.5px] leading-relaxed text-ink-soft">{p.intro}</p>
 
       <div className="my-6 h-px bg-hairline" />
 
-      <ul className="space-y-3 text-[14.5px] text-foreground">
+      <ul className="space-y-3 text-[14.5px]">
         {p.features.map((f) => (
           <li key={f} className="flex items-start gap-3">
             <span
@@ -1501,239 +1306,176 @@ function PaqueteCard({ p }: { p: Paquete }) {
       </ul>
 
       <a
-        href={WHATSAPP_URL}
-        className={`mt-auto pt-8 inline-flex items-center justify-center gap-2 text-[13px] font-semibold uppercase tracking-[0.14em] ${
-          featured ? "" : ""
+        href={p.href}
+        target="_blank"
+        rel="noopener noreferrer"
+        className={`mt-auto inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 text-[13px] font-semibold uppercase tracking-[0.14em] transition-transform hover:-translate-y-0.5 ${
+          featured
+            ? "bg-brand text-brand-foreground hover:bg-foreground"
+            : "border hairline bg-background text-foreground hover:bg-surface"
         }`}
+        style={{ marginTop: "auto", marginBlockStart: "2rem" }}
       >
-        <span
-          className={`inline-flex w-full items-center justify-center gap-2 rounded-full px-5 py-3 transition-transform hover:-translate-y-0.5 ${
-            featured
-              ? "bg-brand text-brand-foreground hover:bg-foreground"
-              : "border hairline bg-background text-foreground hover:bg-surface"
-          }`}
-        >
-          {p.cta}
-          <ArrowRight className="h-3.5 w-3.5" />
-        </span>
+        {p.cta}
+        <ArrowRight className="h-3.5 w-3.5" />
       </a>
     </motion.div>
   );
 }
 
-/* ───────────────────────────── 10 proceso ───────────────────────────── */
+/* ───────────────────────────── 07 proceso ───────────────────────────── */
 
 function Proceso() {
   const steps = [
-    { n: "01", title: "Nos cuentas de tu negocio", desc: "Servicios, fotos, ubicación, redes y datos de contacto." },
-    { n: "02", title: "Ordenamos la información", desc: "Convertimos lo que ya tienes en una estructura clara y profesional." },
-    { n: "03", title: "Diseñamos tu vitrina", desc: "Creamos una página bonita, rápida y adaptada a celular." },
-    { n: "04", title: "Revisas y ajustamos", desc: "Rondas de ajustes según tu paquete para afinar cada detalle." },
-    { n: "05", title: "Publicamos y compartes", desc: "Tu página queda lista para enviarla por WhatsApp, redes, QR o Google." },
+    { n: "01", title: "Cuéntanos sobre tu negocio.", desc: "Realizamos una llamada inicial para conocer tus necesidades." },
+    { n: "02", title: "Envíanos tu material.", desc: "Fotografías, logotipo, información, servicios y datos principales." },
+    { n: "03", title: "Ordenamos y diseñamos.", desc: "Ayudamos a organizar, mejorar y redactar el contenido." },
+    { n: "04", title: "Revisamos contigo.", desc: "Aplicamos las rondas de ajustes incluidas en tu paquete." },
+    { n: "05", title: "Publicamos tu página.", desc: "Pagas el 50% restante y ponemos la página en línea." },
   ];
-
-  const ref = useRef<HTMLDivElement>(null);
-  const { scrollYProgress } = useScroll({ target: ref, offset: ["start 80%", "end 30%"] });
-  const lineScale = useTransform(scrollYProgress, [0, 1], [0, 1]);
-
   return (
-    <section id="proceso" className="py-24 sm:py-28">
+    <section id="proceso" className="py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <Reveal><Eyebrow>Proceso</Eyebrow></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-              De tu negocio a tu página en pocos pasos.
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[50px]">
+              Comenzar es fácil.
             </h2>
           </Reveal>
         </div>
 
-        <div ref={ref} className="relative mt-16">
-          <div className="hidden lg:block absolute left-0 right-0 top-7 h-px bg-hairline" />
-          <motion.div
-            style={{ scaleX: lineScale }}
-            className="hidden lg:block absolute left-0 right-0 top-7 h-px origin-left bg-brand"
-          />
-          <div className="lg:hidden absolute left-[27px] top-0 bottom-0 w-px bg-hairline" />
-          <motion.div
-            style={{ scaleY: lineScale }}
-            className="lg:hidden absolute left-[27px] top-0 bottom-0 w-px origin-top bg-brand"
-          />
+        <ol className="mt-12 grid gap-8 lg:grid-cols-5 lg:gap-6">
+          {steps.map((s, i) => (
+            <Reveal key={s.n} delay={i * 0.06}>
+              <li className="relative pl-16 lg:pl-0">
+                <span className="absolute left-0 top-0 grid h-14 w-14 place-items-center rounded-full border hairline bg-background font-display text-[14px] font-bold tracking-tight lg:relative lg:left-auto lg:top-auto">
+                  {s.n}
+                </span>
+                <h3 className="mt-0 font-display text-[18px] leading-snug tracking-tight lg:mt-6">{s.title}</h3>
+                <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{s.desc}</p>
+              </li>
+            </Reveal>
+          ))}
+        </ol>
 
-          <ol className="relative grid gap-10 lg:grid-cols-5 lg:gap-6">
-            {steps.map((s, i) => (
-              <Reveal key={s.n} delay={i * 0.08}>
-                <li className="relative pl-16 lg:pl-0">
-                  <span className="absolute left-0 top-0 grid h-14 w-14 place-items-center rounded-full border hairline bg-background font-display text-[14px] font-bold tracking-tight text-foreground lg:relative lg:left-auto lg:top-auto">
-                    {s.n}
-                  </span>
-                  <h3 className="mt-0 lg:mt-6 font-display text-[18px] leading-snug tracking-tight">{s.title}</h3>
-                  <p className="mt-2 text-[14px] leading-relaxed text-ink-soft">{s.desc}</p>
-                </li>
-              </Reveal>
-            ))}
-          </ol>
-        </div>
+        <Reveal delay={0.1}>
+          <p className="mt-10 text-[13.5px] text-ink-soft">
+            Tiempo estimado de entrega: de 3 a 5 días naturales, una vez recibido el material necesario.
+          </p>
+        </Reveal>
       </div>
     </section>
   );
 }
 
-/* ───────────────────────────── 11 demo whatsapp ───────────────────────────── */
+/* ───────────────────────────── 08 herramientas web ───────────────────────────── */
 
-function DemoWhatsapp() {
-  const [step, setStep] = useState(0); // 0 initial, 1 opened, 2+ messages
-  const messages = useMemo(
-    () => [
-      { from: "cliente", text: "Hola 👋 vi su página y quisiera conocer sus servicios." },
-      { from: "negocio", text: "¡Hola! Con gusto te comparto la información 😊" },
-    ],
-    [],
-  );
-
-  useEffect(() => {
-    if (step === 1) {
-      const t = setTimeout(() => setStep(2), 900);
-      return () => clearTimeout(t);
-    }
-    if (step === 2) {
-      const t = setTimeout(() => setStep(3), 1400);
-      return () => clearTimeout(t);
-    }
-  }, [step]);
-
+function HerramientasWeb() {
   return (
-    <section className="bg-surface py-24 sm:py-28">
+    <section className="bg-trust py-20 text-trust-foreground sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="grid gap-12 lg:grid-cols-[1fr_1fr] lg:items-center">
+        <div className="grid items-center gap-10 lg:grid-cols-[1fr_1.05fr]">
           <div>
-            <Reveal><Eyebrow>Demostración</Eyebrow></Reveal>
-            <Reveal delay={0.05}>
-              <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-                Del interés al primer mensaje, en un clic.
-              </h2>
-            </Reveal>
-            <Reveal delay={0.1}>
-              <p className="mt-5 text-[15.5px] leading-relaxed text-ink-soft max-w-md">
-                Cada página termina en un botón que abre WhatsApp con un mensaje
-                listo. Sin formularios largos ni fricción.
-              </p>
-            </Reveal>
-            <Reveal delay={0.15}>
+            <span className="eyebrow !text-trust-foreground/70">
+              No todo tiene que ser una página informativa
+            </span>
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[48px]">
+              También podemos revisar <span className="text-brand">herramientas</span> para tu negocio.
+            </h2>
+            <p className="mt-5 max-w-lg text-[15.5px] leading-relaxed text-trust-foreground/80">
+              Algunos proyectos requieren funciones especiales. Revisamos cada idea
+              para confirmar si podemos desarrollarla y preparamos una cotización
+              independiente.
+            </p>
+            <p className="mt-5 max-w-lg rounded-2xl border border-trust-foreground/20 bg-trust-foreground/5 px-4 py-3 text-[13.5px] leading-relaxed text-trust-foreground/85">
+              Las aplicaciones, sistemas, automatizaciones e integraciones no están
+              incluidas en Vitrina Inicial ni en Vitrina Pro.
+            </p>
+            <div className="mt-7 flex flex-wrap gap-3">
               <a
-                href={WHATSAPP_URL}
-                className="mt-8 inline-flex items-center gap-2 rounded-full bg-trust px-6 py-3.5 text-sm font-semibold text-trust-foreground transition-transform hover:-translate-y-0.5"
+                href={WA.especial}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full bg-brand px-6 py-3.5 text-sm font-semibold text-brand-foreground transition-transform hover:-translate-y-0.5"
               >
-                <MessageCircle className="h-4 w-4" /> Escribir por WhatsApp
+                <Wrench className="h-4 w-4" /> Consultar un proyecto especial
               </a>
-            </Reveal>
+              <a
+                href="https://tu-fiesta-facil.lovable.app/"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-2 rounded-full border border-trust-foreground/30 px-6 py-3.5 text-sm font-semibold text-trust-foreground transition-colors hover:bg-trust-foreground/10"
+              >
+                Ver herramienta real ↗
+              </a>
+            </div>
           </div>
 
-          <Reveal delay={0.1}>
-            <div className="mx-auto w-full max-w-sm rounded-[36px] border hairline bg-background p-3 shadow-[0_30px_80px_-30px_rgba(30,30,30,0.3)]">
-              <div className="rounded-[28px] bg-[#E9E2D7] p-4 min-h-[420px] flex flex-col">
-                {step === 0 ? (
-                  <motion.div
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    className="m-auto text-center"
-                  >
-                    <p className="font-display text-[20px] leading-snug tracking-tight text-foreground">
-                      ¿Te interesa este negocio?
-                    </p>
-                    <button
-                      onClick={() => setStep(1)}
-                      className="mt-6 inline-flex items-center gap-2 rounded-full bg-trust px-5 py-3 text-[13px] font-semibold text-trust-foreground shadow-md hover:-translate-y-0.5 transition-transform"
-                    >
-                      <MessageCircle className="h-4 w-4" /> Escribir por WhatsApp
-                    </button>
-                  </motion.div>
-                ) : (
-                  <>
-                    <div className="flex items-center gap-3 border-b border-foreground/10 pb-3">
-                      <div className="h-9 w-9 rounded-full bg-trust text-trust-foreground grid place-items-center text-[11px] font-semibold">
-                        TN
-                      </div>
-                      <div>
-                        <div className="text-[13px] font-semibold text-foreground">Tu Negocio</div>
-                        <div className="text-[10.5px] text-ink-soft">en línea</div>
-                      </div>
-                    </div>
-                    <div className="mt-4 flex-1 space-y-2 overflow-hidden">
-                      {step >= 2 && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="max-w-[85%] rounded-2xl rounded-br-sm bg-brand text-brand-foreground px-3 py-2 text-[13px] ml-auto"
-                        >
-                          {messages[0].text}
-                        </motion.div>
-                      )}
-                      {step >= 3 && (
-                        <motion.div
-                          initial={{ opacity: 0, y: 8 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          className="max-w-[85%] rounded-2xl rounded-bl-sm bg-background text-foreground px-3 py-2 text-[13px]"
-                        >
-                          {messages[1].text}
-                        </motion.div>
-                      )}
-                    </div>
-                    <a
-                      href={WHATSAPP_URL}
-                      className="mt-4 inline-flex items-center justify-center gap-2 rounded-full bg-trust px-4 py-2.5 text-[12.5px] font-semibold text-trust-foreground"
-                    >
-                      <Send className="h-3.5 w-3.5" /> Abrir WhatsApp
-                    </a>
-                  </>
-                )}
-              </div>
+          <div className="rounded-[28px] border border-trust-foreground/15 bg-[#3a2c25] p-3 shadow-[0_40px_100px_-40px_rgba(0,0,0,0.6)]">
+            <div className="overflow-hidden rounded-[20px] bg-background">
+              <img
+                src={projFiesta}
+                alt="Captura real de la herramienta web Tu Fiesta Fácil"
+                loading="lazy"
+                className="h-full w-full object-cover"
+              />
             </div>
-          </Reveal>
+            <p className="px-2 pb-1 pt-3 text-[12px] text-trust-foreground/70">
+              Tu Fiesta Fácil — proyecto especial cotizado por separado.
+            </p>
+          </div>
         </div>
       </div>
     </section>
   );
 }
 
-/* ───────────────────────────── 12 testimonios ───────────────────────────── */
+/* ───────────────────────────── 09 testimonios ───────────────────────────── */
 
 function Testimonios() {
   const items = [
-    { quote: "Antes mandaba solo mi Facebook. Ahora mando mi página y la gente entiende rápido mis servicios.", role: "Dueña de salón de belleza" },
-    { quote: "Nos ayudó a presentar las cabañas con fotos, ubicación y botón de reserva por WhatsApp.", role: "Proyecto ecoturístico" },
-    { quote: "Mis pacientes encuentran horarios, enfoque de atención y contacto sin tener que preguntar todo por mensaje.", role: "Psicóloga" },
+    {
+      quote: "Mi página le da mayor certeza a mis consultantes y demuestra mi profesionalismo y experiencia.",
+      name: "Psicóloga Violeta",
+      project: "Terapia con Violeta",
+    },
+    {
+      quote: "Me ha ayudado mucho a aclarar dudas desde antes de que me pregunten, sobre todo acerca de nuestros servicios.",
+      name: "Omero",
+      project: "La Florida Paraíso Ecoturístico",
+    },
+    {
+      quote: "La información se muestra de forma más clara y evita confusiones.",
+      name: "Ana Solís",
+      project: "",
+    },
   ];
   return (
-    <section className="py-24 sm:py-28">
+    <section className="py-20 sm:py-24">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="max-w-2xl">
           <Reveal><Eyebrow>Testimonios</Eyebrow></Reveal>
           <Reveal delay={0.05}>
-            <h2 className="mt-4 font-display text-[32px] leading-[1.1] tracking-tight sm:text-[44px] lg:text-[52px]">
-              Negocios que se ven más claros, serios y confiables.
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px] lg:text-[50px]">
+              Lo que dicen quienes ya tienen su página.
             </h2>
           </Reveal>
         </div>
 
-        <div className="mt-12 grid gap-5 md:grid-cols-3">
+        <div className="mt-11 grid gap-5 md:grid-cols-3">
           {items.map((t, i) => (
-            <Reveal key={t.role} delay={i * 0.08}>
+            <Reveal key={t.name} delay={i * 0.06}>
               <motion.div
                 whileHover={{ y: -5 }}
                 transition={spring}
                 className="h-full rounded-3xl border hairline bg-background p-7"
               >
                 <Quote className="h-6 w-6 text-brand" />
-                <p className="mt-4 font-display text-[17.5px] leading-snug tracking-tight">
-                  “{t.quote}”
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="h-9 w-9 rounded-full bg-surface" />
-                  <div>
-                    <p className="text-[12px] font-semibold uppercase tracking-[0.14em] text-foreground">Cliente</p>
-                    <p className="text-[12.5px] text-ink-soft">{t.role}</p>
-                  </div>
+                <p className="mt-4 font-display text-[17px] leading-snug tracking-tight">“{t.quote}”</p>
+                <div className="mt-6">
+                  <p className="text-[13px] font-semibold text-foreground">{t.name}</p>
+                  {t.project && <p className="text-[12.5px] text-ink-soft">{t.project}</p>}
                 </div>
               </motion.div>
             </Reveal>
@@ -1744,20 +1486,47 @@ function Testimonios() {
   );
 }
 
-/* ───────────────────────────── 13 cta final ───────────────────────────── */
+/* ───────────────────────────── 10 preguntas frecuentes ───────────────────────────── */
+
+function Preguntas() {
+  return (
+    <section id="faq" className="bg-surface py-20 sm:py-24">
+      <div className="mx-auto max-w-4xl px-4 sm:px-6 lg:px-8">
+        <div className="max-w-2xl">
+          <Reveal><Eyebrow>Preguntas frecuentes</Eyebrow></Reveal>
+          <Reveal delay={0.05}>
+            <h2 className="mt-4 font-display text-[30px] leading-[1.1] tracking-tight sm:text-[42px]">
+              Resolvemos las dudas más comunes.
+            </h2>
+          </Reveal>
+        </div>
+
+        <Reveal delay={0.1}>
+          <Accordion type="single" collapsible className="mt-10 rounded-3xl border hairline bg-background px-5 sm:px-7">
+            {FAQ.map((f, i) => (
+              <AccordionItem key={f.q} value={`item-${i}`}>
+                <AccordionTrigger className="text-left font-display text-[16.5px] tracking-tight hover:no-underline">
+                  {f.q}
+                </AccordionTrigger>
+                <AccordionContent className="text-[14.5px] leading-relaxed text-ink-soft">
+                  {f.a}
+                </AccordionContent>
+              </AccordionItem>
+            ))}
+          </Accordion>
+        </Reveal>
+      </div>
+    </section>
+  );
+}
+
+/* ───────────────────────────── 11 cta final ───────────────────────────── */
 
 function CtaFinal() {
-  const checks = [
-    "Proyectos reales publicados",
-    "Diseño adaptable a celular",
-    "Botón de WhatsApp",
-    "Rondas de ajustes claras",
-    "Precio accesible",
-  ];
   return (
-    <section id="contacto" className="py-20 sm:py-24">
+    <section id="contacto" className="py-16 sm:py-20">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        <div className="relative overflow-hidden rounded-[32px] bg-brand px-7 py-16 text-brand-foreground sm:px-12 sm:py-20">
+        <div className="relative overflow-hidden rounded-[32px] bg-brand px-7 py-16 text-center text-brand-foreground sm:px-12 sm:py-20">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-0 opacity-20"
@@ -1766,53 +1535,35 @@ function CtaFinal() {
                 "radial-gradient(circle at 20% 20%, rgba(255,255,255,0.35), transparent 40%), radial-gradient(circle at 80% 80%, rgba(255,255,255,0.25), transparent 40%)",
             }}
           />
-          <div className="relative grid gap-10 lg:grid-cols-[1.2fr_1fr] lg:items-center">
-            <div>
-              <Reveal><span className="eyebrow !text-brand-foreground/80">Empieza hoy</span></Reveal>
-              <Reveal delay={0.05}>
-                <h2 className="mt-4 font-display text-[34px] leading-[1.05] tracking-tight sm:text-[48px] lg:text-[58px]">
-                  Tu negocio ya existe.
-                  <br />
-                  <span className="text-brand-foreground/80">
-                    Ahora dale una presentación profesional.
-                  </span>
-                </h2>
-              </Reveal>
-              <Reveal delay={0.1}>
-                <p className="mt-5 max-w-xl text-[16px] leading-relaxed text-brand-foreground/85">
-                  Creamos tu página web de forma clara, económica y con criterio
-                  de diseño para que tus clientes confíen más y te contacten fácil.
-                </p>
-              </Reveal>
-              <Reveal delay={0.15}>
-                <div className="mt-8 flex flex-wrap items-center gap-3">
-                  <a
-                    href={WHATSAPP_URL}
-                    className="inline-flex items-center gap-2 rounded-full bg-trust px-6 py-3.5 text-sm font-semibold text-trust-foreground transition-transform hover:-translate-y-0.5"
-                  >
-                    <MessageCircle className="h-4 w-4" /> Escribir por WhatsApp
-                  </a>
-                  <a
-                    href="#paquetes"
-                    className="inline-flex items-center gap-2 rounded-full border border-brand-foreground/30 bg-transparent px-6 py-3.5 text-sm font-semibold text-brand-foreground hover:bg-brand-foreground/10 transition-colors"
-                  >
-                    Quiero mi página
-                  </a>
-                </div>
-              </Reveal>
-            </div>
-
-            <Reveal delay={0.2}>
-              <ul className="grid gap-3 rounded-2xl border border-brand-foreground/20 bg-brand-foreground/5 p-5 backdrop-blur-sm">
-                {checks.map((c) => (
-                  <li key={c} className="flex items-center gap-3 text-[14.5px]">
-                    <span className="inline-flex h-6 w-6 flex-none items-center justify-center rounded-full bg-brand-foreground text-brand">
-                      <Check className="h-3.5 w-3.5" strokeWidth={3} />
-                    </span>
-                    {c}
-                  </li>
-                ))}
-              </ul>
+          <div className="relative mx-auto max-w-3xl">
+            <Reveal>
+              <h2 className="font-display text-[30px] leading-[1.08] tracking-tight sm:text-[46px]">
+                Tu negocio ya existe.
+                <br />
+                <span className="text-brand-foreground/85">
+                  Hagamos que también se vea profesional en internet.
+                </span>
+              </h2>
+            </Reveal>
+            <Reveal delay={0.06}>
+              <p className="mt-5 text-[16px] text-brand-foreground/90">
+                Páginas profesionales a precio accesible, desde $1,000 MXN.
+              </p>
+            </Reveal>
+            <Reveal delay={0.1}>
+              <a
+                href={WA.hero}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-8 inline-flex items-center gap-2 rounded-full bg-trust px-7 py-4 text-sm font-semibold text-trust-foreground transition-transform hover:-translate-y-0.5"
+              >
+                <MessageCircle className="h-4 w-4" /> Quiero mi página
+              </a>
+            </Reveal>
+            <Reveal delay={0.14}>
+              <p className="mt-5 text-[13px] text-brand-foreground/80">
+                Dominio y alojamiento incluidos durante el primer año.
+              </p>
             </Reveal>
           </div>
         </div>
@@ -1821,72 +1572,79 @@ function CtaFinal() {
   );
 }
 
-/* ───────────────────────────── 14 footer ───────────────────────────── */
+/* ───────────────────────────── 12 footer ───────────────────────────── */
 
 function Footer() {
+  const links = [
+    { label: "Proyectos", href: "#proyectos" },
+    { label: "Precios", href: "#precios" },
+    { label: "Proceso", href: "#proceso" },
+    { label: "Preguntas frecuentes", href: "#faq" },
+  ];
   return (
-    <footer className="border-t hairline bg-background">
-      <div className="mx-auto max-w-7xl px-4 py-16 sm:px-6 lg:px-8">
-        <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr_1fr_1fr]">
+    <footer className="border-t hairline bg-background pb-24 sm:pb-0">
+      <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8">
+        <div className="grid gap-10 lg:grid-cols-[1.6fr_1fr_1fr]">
           <div>
             <Logo />
             <p className="mt-5 max-w-sm text-[14px] leading-relaxed text-ink-soft">
-              Páginas web con criterio editorial para negocios locales y proyectos
-              profesionales.
+              Mi Vitrina Digital · Vitrina Pro. Páginas profesionales a precio accesible.
+            </p>
+            <p className="mt-4 inline-flex items-center gap-2 text-[13.5px] text-ink-soft">
+              <MapPin className="h-4 w-4 text-brand" /> San Cristóbal de Las Casas, Chiapas
+            </p>
+            <p className="mt-2 text-[13.5px] text-ink-soft">
+              Atención a México, Estados Unidos y otros países.
             </p>
           </div>
-          <FooterCol title="Paquetes" items={["Vitrina Inicial", "Vitrina Pro", "Actualizaciones", "Herramientas a medida"]} />
-          <FooterCol title="Proyectos" items={["La Florida Paraíso Ecoturístico", "Terapia con Violeta", "AEME — Alianza Empresarial", "Tu Fiesta Fácil", "Qi Flow Hands"]} />
+
           <div>
-            <h4 className="eyebrow">Contacto</h4>
+            <h4 className="eyebrow">Secciones</h4>
             <ul className="mt-4 space-y-3 text-[14px] text-ink-soft">
+              {links.map((l) => (
+                <li key={l.href}>
+                  <a href={l.href} className="hover:text-foreground transition-colors">
+                    {l.label}
+                  </a>
+                </li>
+              ))}
               <li>
-                <a href={WHATSAPP_URL} className="inline-flex items-center gap-2 hover:text-foreground">
-                  <MessageCircle className="h-4 w-4 text-trust" /> WhatsApp
-                </a>
-              </li>
-              <li>
-                <a href="#" className="inline-flex items-center gap-2 hover:text-foreground">
-                  <Instagram className="h-4 w-4" /> Instagram
-                </a>
-              </li>
-              <li>
-                <a href="#" className="inline-flex items-center gap-2 hover:text-foreground">
-                  <Facebook className="h-4 w-4" /> Facebook
-                </a>
-              </li>
-              <li>
-                <a href="mailto:hola@mivitrinadigital.mx" className="inline-flex items-center gap-2 hover:text-foreground">
-                  <Mail className="h-4 w-4" /> Correo
+                <a
+                  href={WA.flotante}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="hover:text-foreground transition-colors"
+                >
+                  WhatsApp
                 </a>
               </li>
             </ul>
           </div>
+
+          <div>
+            <h4 className="eyebrow">Contacto</h4>
+            <ul className="mt-4 space-y-3 text-[14px] text-ink-soft">
+              <li>
+                <a
+                  href={WA.flotante}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="inline-flex items-center gap-2 hover:text-foreground"
+                >
+                  <MessageCircle className="h-4 w-4 text-trust" /> WhatsApp +52 961 255 9561
+                </a>
+              </li>
+              <li className="inline-flex items-center gap-2">
+                <Instagram className="h-4 w-4" /> <Facebook className="h-4 w-4" /> Próximamente
+              </li>
+            </ul>
+          </div>
         </div>
-        <div className="mt-14 flex flex-col gap-4 border-t hairline pt-6 text-[12.5px] text-ink-soft sm:flex-row sm:items-center sm:justify-between">
-          <p>© 2026 Mi Vitrina Digital · Vitrina Pro. Todos los derechos reservados.</p>
-          <p className="inline-flex items-center gap-2">
-            <Phone className="h-3.5 w-3.5" /> Hecho para pequeños negocios.
-          </p>
+
+        <div className="mt-12 border-t hairline pt-6 text-[12.5px] text-ink-soft">
+          © 2026 Mi Vitrina Digital · Vitrina Pro.
         </div>
       </div>
     </footer>
-  );
-}
-
-function FooterCol({ title, items }: { title: string; items: string[] }) {
-  return (
-    <div>
-      <h4 className="eyebrow">{title}</h4>
-      <ul className="mt-4 space-y-3 text-[14px] text-ink-soft">
-        {items.map((i) => (
-          <li key={i}>
-            <a href="#" className="hover:text-foreground transition-colors">
-              {i}
-            </a>
-          </li>
-        ))}
-      </ul>
-    </div>
   );
 }
